@@ -8,12 +8,12 @@ export class BlogPostResolver {
   constructor(private blogpostService: BlogpostService) {}
 
   @Query((returns) => [BlogPostType])
-  blogposts() {
+  getblogposts() {
     return this.blogpostService.getAllBlogPosts();
   }
 
   @Query((returns) => BlogPostType)
-  blogpost(@Args('id') id: string) {
+  blogpostById(@Args('id') id: string) {
     return this.blogpostService.getBlogPost(id);
   }
 

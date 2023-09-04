@@ -16,9 +16,10 @@ type User {
 }
 
 type Query {
-  blogposts: [BlogPost!]!
-  blogpost(id: String!): BlogPost!
+  getblogposts: [BlogPost!]!
+  blogpostById(id: String!): BlogPost!
   getUsers: [User!]!
+  getUserById(id: String!): User!
 }
 
 type Mutation {

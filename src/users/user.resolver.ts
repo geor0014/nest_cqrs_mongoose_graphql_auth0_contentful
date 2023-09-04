@@ -16,4 +16,9 @@ export class UserResolver {
   getUsers() {
     return this.userService.getUsers();
   }
+
+  @Query((returns) => UserType)
+  getUserById(@Args('id') id: string) {
+    return this.userService.getUserById(id);
+  }
 }
