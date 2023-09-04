@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { BlogpostModule } from './blogpost/blogpost.module';
 import { MongooseModule } from '@nestjs/mongoose';
+
+import { BlogpostModule } from './blogpost/blogpost.module';
+import { BlogpostService } from './blogpost/blogpost.service';
+
 import { UsersModule } from './users/users.module';
-import { UserService } from './user/user.service';
+import { UsersService } from './users/users.service';
 require('dotenv').config();
 
 @Module({
@@ -13,12 +16,9 @@ require('dotenv').config();
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
     }),
-    MongooseModule.forRoot(
-      process.env.MONGO_URI
-    ),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     BlogpostModule,
     UsersModule,
   ],
-  providers: [UserService],
 })
 export class AppModule {}
