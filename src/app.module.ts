@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { BlogpostModule } from './blogpost/blogpost.module';
+import { MongooseModule } from '@nestjs/mongoose';
+require('dotenv').config();
 
 @Module({
   imports: [
@@ -9,6 +11,9 @@ import { BlogpostModule } from './blogpost/blogpost.module';
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
     }),
+    MongooseModule.forRoot(
+      process.env.MONGO_URI
+    ),
     BlogpostModule,
   ],
 })
