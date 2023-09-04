@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { BlogPost } from './blogpost.schema';
 import { Model } from 'mongoose';
 import { create } from 'domain';
+import { CreateBlogPostDto } from './dto/create-blogpost-dto';
 
 @Injectable()
 export class BlogpostService {
@@ -10,8 +11,10 @@ export class BlogpostService {
     @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
   ) {}
 
-  async createBlogPost(title: string, content: string) {
-    const newBlogPost = new this.blogPostModel({ title, content });
+  async createBlogPost(
+    createBlogPostDto: CreateBlogPostDto,
+  ): Promise<BlogPost> {
+    const newBlogPost = new this.blogPostModel(createBlogPostDto);
     return newBlogPost.save();
   }
 
