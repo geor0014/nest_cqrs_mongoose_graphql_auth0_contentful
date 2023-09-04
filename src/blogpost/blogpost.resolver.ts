@@ -1,4 +1,4 @@
-import { Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { BlogPostType } from './blogpost.type';
 import { BlogpostService } from './blogpost.service';
 
@@ -15,5 +15,10 @@ export class BlogPostResolver {
   }
 
   @Mutation((returns) => BlogPostType)
-  createBlogPost() {}
+  createBlogPost(
+    @Args('title') title: string,
+    @Args('content') content: string,
+  ) {
+    return this.blogpostService.createBlogPost(title, content);
+  }
 }

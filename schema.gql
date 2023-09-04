@@ -13,5 +13,5 @@ type Query {
 }
 
 type Mutation {
-  createBlogPost: BlogPost!
+  createBlogPost(title: String!, content: String!): BlogPost!
 }
