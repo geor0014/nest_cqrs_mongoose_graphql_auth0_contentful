@@ -3,6 +3,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { BlogpostModule } from './blogpost/blogpost.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { UsersModule } from './users/users.module';
+import { UserService } from './user/user.service';
 require('dotenv').config();
 
 @Module({
@@ -15,6 +17,8 @@ require('dotenv').config();
       process.env.MONGO_URI
     ),
     BlogpostModule,
+    UsersModule,
   ],
+  providers: [UserService],
 })
 export class AppModule {}
