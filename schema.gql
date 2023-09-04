@@ -9,7 +9,7 @@ type BlogPost {
 }
 
 type Query {
-  blogPost: BlogPost!
+  blogpost(id: String!): BlogPost!
 }
 
 type Mutation {

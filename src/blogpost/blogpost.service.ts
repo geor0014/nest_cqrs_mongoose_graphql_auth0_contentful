@@ -15,7 +15,7 @@ export class BlogpostService {
     return newBlogPost.save();
   }
 
-  async getBlogPost(id: string) {
+  async getBlogPost(id: string): Promise<BlogPost> {
     return this.blogPostModel.findById(id).exec();
   }
 
