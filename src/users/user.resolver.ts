@@ -11,4 +11,9 @@ export class UserResolver {
   createUser(@Args('createUserDto') CreateUserDto: CreateUserDto) {
     return this.userService.createUser(CreateUserDto);
   }
+
+  @Query((returns) => [UserType])
+  getUsers() {
+    return this.userService.getUsers();
+  }
 }

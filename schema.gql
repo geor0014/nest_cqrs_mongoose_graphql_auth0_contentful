@@ -18,6 +18,7 @@ type User {
 type Query {
   blogposts: [BlogPost!]!
   blogpost(id: String!): BlogPost!
+  getUsers: [User!]!
 }
 
 type Mutation {
