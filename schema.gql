@@ -11,3 +11,7 @@ type BlogPost {
 type Query {
   blogPost: BlogPost!
 }
+
+type Mutation {
+  createBlogPost: BlogPost!
+}
