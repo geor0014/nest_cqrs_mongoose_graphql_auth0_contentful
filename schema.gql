@@ -8,6 +8,13 @@ type BlogPost {
   content: String!
 }
 
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  password: String!
+}
+
 type Query {
   blogposts: [BlogPost!]!
   blogpost(id: String!): BlogPost!
@@ -15,9 +22,16 @@ type Query {
 
 type Mutation {
   createBlogPost(createBlogPostDto: CreateBlogPostDto!): BlogPost!
+  createUser(createUserDto: CreateUserDto!): User!
 }
 
 input CreateBlogPostDto {
   title: String!
   content: String!
+}
+
+input CreateUserDto {
+  name: String!
+  email: String!
+  password: String!
 }
