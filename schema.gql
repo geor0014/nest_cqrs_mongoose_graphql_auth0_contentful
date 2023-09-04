@@ -9,6 +9,7 @@ type BlogPost {
 }
 
 type Query {
+  blogposts: [BlogPost!]!
   blogpost(id: String!): BlogPost!
 }
 

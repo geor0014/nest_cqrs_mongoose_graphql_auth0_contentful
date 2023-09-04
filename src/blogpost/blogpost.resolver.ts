@@ -7,6 +7,11 @@ import { CreateBlogPostDto } from './dto/create-blogpost-dto';
 export class BlogPostResolver {
   constructor(private blogpostService: BlogpostService) {}
 
+  @Query((returns) => [BlogPostType])
+  blogposts() {
+    return this.blogpostService.getAllBlogPosts();
+  }
+
   @Query((returns) => BlogPostType)
   blogpost(@Args('id') id: string) {
     return this.blogpostService.getBlogPost(id);

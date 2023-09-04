@@ -22,7 +22,7 @@ export class BlogpostService {
     return this.blogPostModel.findById(id).exec();
   }
 
-  async getAllBlogPosts() {
+  async getAllBlogPosts(): Promise<BlogPost[]> {
     return this.blogPostModel.find().exec();
   }
 }
