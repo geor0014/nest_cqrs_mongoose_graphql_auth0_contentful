@@ -26,6 +26,8 @@ type Query {
 
 type Mutation {
   createBlogPost(createBlogPostDto: CreateBlogPostDto!): BlogPost!
+  updateBlogPost(id: String!, UpdateBlogPostDto: UpdateBlogPostDto!): BlogPost!
+  deleteBlogPost(id: String!): BlogPost!
   createUser(createUserDto: CreateUserDto!): User!
   assignBlogPostToUser(assignBlogPostToUserDto: AssignBlogPostToUserDto!): User!
   updateUser(id: String!, UpdateUserDto: UpdateUserDto!): User!
@@ -36,6 +38,11 @@ input CreateBlogPostDto {
   title: String!
   content: String!
   user: ID!
+}
+
+input UpdateBlogPostDto {
+  title: String
+  content: String
 }
 
 input CreateUserDto {
