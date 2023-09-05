@@ -1,4 +1,4 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field, ID } from '@nestjs/graphql';
 import { MinLength, IsString } from 'class-validator';
 @InputType()
 export class CreateBlogPostDto {
@@ -11,4 +11,8 @@ export class CreateBlogPostDto {
   @IsString()
   @Field()
   content: string;
+
+  @IsString()
+  @Field(() => ID, { nullable: false })
+  user: string;
 }

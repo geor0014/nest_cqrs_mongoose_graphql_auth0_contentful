@@ -33,12 +33,14 @@ type Mutation {
 input CreateBlogPostDto {
   title: String!
   content: String!
+  user: ID!
 }
 
 input CreateUserDto {
   name: String!
   email: String!
   password: String!
+  blogPosts: [ID!]
 }
 
 input AssignBlogPostToUserDto {
