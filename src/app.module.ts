@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { BlogpostModule } from './blogpost/blogpost.module';
 
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 require('dotenv').config();
 
 @Module({
@@ -17,6 +18,7 @@ require('dotenv').config();
     MongooseModule.forRoot(process.env.MONGO_URI),
     BlogpostModule,
     UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

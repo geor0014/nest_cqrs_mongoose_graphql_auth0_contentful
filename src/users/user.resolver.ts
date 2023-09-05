@@ -13,8 +13,11 @@ import { AssignBlogPostToUserDto } from './dto/assign-blogpost-to-user-dto';
 import { User } from './user.schema';
 import { BlogpostService } from 'src/blogpost/blogpost.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UseGuards } from '@nestjs/common';
+import { LocalGuard } from 'src/auth/local_guard';
 
 @Resolver((of) => UserType)
+@UseGuards(LocalGuard)
 export class UserResolver {
   constructor(
     private userService: UsersService,
