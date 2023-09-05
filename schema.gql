@@ -28,6 +28,8 @@ type Mutation {
   createBlogPost(createBlogPostDto: CreateBlogPostDto!): BlogPost!
   createUser(createUserDto: CreateUserDto!): User!
   assignBlogPostToUser(assignBlogPostToUserDto: AssignBlogPostToUserDto!): User!
+  updateUser(id: String!, UpdateUserDto: UpdateUserDto!): User!
+  deleteUser(id: String!): User!
 }
 
 input CreateBlogPostDto {
@@ -46,4 +48,10 @@ input CreateUserDto {
 input AssignBlogPostToUserDto {
   userId: ID!
   blogPosts: [ID!]!
+}
+
+input UpdateUserDto {
+  name: String
+  email: String
+  password: String
 }

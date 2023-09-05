@@ -12,6 +12,7 @@ import { CreateUserDto } from './dto/create-user-dto';
 import { AssignBlogPostToUserDto } from './dto/assign-blogpost-to-user-dto';
 import { User } from './user.schema';
 import { BlogpostService } from 'src/blogpost/blogpost.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Resolver((of) => UserType)
 export class UserResolver {
@@ -42,6 +43,19 @@ export class UserResolver {
   ) {
     const { userId, blogPosts } = assignBlogPostToUserDto;
     return this.userService.assignBlogPostToUser(userId, blogPosts);
+  }
+
+  @Mutation((returns) => UserType)
+  updateUser(
+    @Args('id') id: string,
+    @Args('UpdateUserDto') UpdateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.updateUser(id, UpdateUserDto);
+  }
+
+  @Mutation((returns) => UserType)
+  deleteUser(@Args('id') id: string) {
+    return this.userService.deleteUser(id);
   }
 
   @ResolveField()
