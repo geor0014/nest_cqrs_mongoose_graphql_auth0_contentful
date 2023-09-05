@@ -1,12 +1,24 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { UserType } from './user.type';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user-dto';
 import { AssignBlogPostToUserDto } from './dto/assign-blogpost-to-user-dto';
+import { User } from './user.schema';
+import { BlogpostService } from 'src/blogpost/blogpost.service';
 
 @Resolver((of) => UserType)
 export class UserResolver {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private blogPostService: BlogpostService,
+  ) {}
 
   @Mutation((returns) => UserType)
   createUser(@Args('createUserDto') CreateUserDto: CreateUserDto) {
@@ -30,5 +42,10 @@ export class UserResolver {
   ) {
     const { userId, blogPosts } = assignBlogPostToUserDto;
     return this.userService.assignBlogPostToUser(userId, blogPosts);
+  }
+
+  @ResolveField()
+  async blogPosts(@Parent() user: User) {
+    return this.blogPostService.getManyBlogPosts(user.blogPosts);
   }
 }

@@ -4,10 +4,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { BlogpostModule } from './blogpost/blogpost.module';
-import { BlogpostService } from './blogpost/blogpost.service';
 
 import { UsersModule } from './users/users.module';
-import { UsersService } from './users/users.service';
 require('dotenv').config();
 
 @Module({

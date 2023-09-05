@@ -14,5 +14,6 @@ import { BlogpostService } from './blogpost.service';
       },
     ]),
   ],
+  exports: [BlogpostService],
 })
 export class BlogpostModule {}

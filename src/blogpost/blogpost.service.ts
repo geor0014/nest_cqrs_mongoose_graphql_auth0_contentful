@@ -24,4 +24,8 @@ export class BlogpostService {
   async getAllBlogPosts(): Promise<BlogPost[]> {
     return this.blogPostModel.find().exec();
   }
+
+  async getManyBlogPosts(blogPostIds: string[]): Promise<BlogPost[]> {
+    return this.blogPostModel.find({ _id: { $in: blogPostIds } }).exec();
+  }
 }
