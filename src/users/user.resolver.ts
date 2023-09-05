@@ -2,6 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserType } from './user.type';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user-dto';
+import { AssignBlogPostToUserDto } from './dto/assign-blogpost-to-user-dto';
 
 @Resolver((of) => UserType)
 export class UserResolver {
@@ -20,5 +21,14 @@ export class UserResolver {
   @Query((returns) => UserType)
   getUserById(@Args('id') id: string) {
     return this.userService.getUserById(id);
+  }
+
+  @Mutation((returns) => UserType)
+  assignBlogPostToUser(
+    @Args('assignBlogPostToUserDto')
+    assignBlogPostToUserDto: AssignBlogPostToUserDto,
+  ) {
+    const { userId, blogPosts } = assignBlogPostToUserDto;
+    return this.userService.assignBlogPostToUser(userId, blogPosts);
   }
 }

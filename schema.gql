@@ -2,17 +2,19 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type BlogPost {
-  id: ID!
-  title: String!
-  content: String!
-}
-
 type User {
   id: ID!
   name: String!
   email: String!
   password: String!
+  blogPosts: [BlogPost!]
+}
+
+type BlogPost {
+  id: ID!
+  title: String!
+  content: String!
+  user: User!
 }
 
 type Query {
@@ -25,6 +27,7 @@ type Query {
 type Mutation {
   createBlogPost(createBlogPostDto: CreateBlogPostDto!): BlogPost!
   createUser(createUserDto: CreateUserDto!): User!
+  assignBlogPostToUser(assignBlogPostToUserDto: AssignBlogPostToUserDto!): User!
 }
 
 input CreateBlogPostDto {
@@ -36,4 +39,9 @@ input CreateUserDto {
   name: String!
   email: String!
   password: String!
+}
+
+input AssignBlogPostToUserDto {
+  userId: ID!
+  blogPosts: [ID!]!
 }
