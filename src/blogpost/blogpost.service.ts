@@ -30,11 +30,14 @@ export class BlogpostService {
     return this.blogPostModel.find({ _id: { $in: blogPostIds } }).exec();
   }
 
-  async updateBlogPost(id: string, updateBlogPostDto: UpdateBlogPostDto) {
+  async updateBlogPost(
+    id: string,
+    updateBlogPostDto: UpdateBlogPostDto,
+  ): Promise<BlogPost> {
     return this.blogPostModel.findByIdAndUpdate(id, updateBlogPostDto);
   }
 
-  async deleteBlogPost(id: string) {
+  async deleteBlogPost(id: string): Promise<BlogPost> {
     return this.blogPostModel.findByIdAndDelete(id);
   }
 }

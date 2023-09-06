@@ -22,11 +22,11 @@ export class UsersService {
     return this.userModel.findById(id).exec();
   }
 
-  async updateUser(id: string, UpdateUserDto: UpdateUserDto) {
+  async updateUser(id: string, UpdateUserDto: UpdateUserDto): Promise<User> {
     return this.userModel.findByIdAndUpdate(id, UpdateUserDto);
   }
 
-  async deleteUser(id: string) {
+  async deleteUser(id: string): Promise<User> {
     return this.userModel.findByIdAndDelete(id);
   }
 

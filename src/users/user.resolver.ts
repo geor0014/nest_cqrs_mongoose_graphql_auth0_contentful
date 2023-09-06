@@ -15,6 +15,7 @@ import { BlogpostService } from 'src/blogpost/blogpost.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UseGuards } from '@nestjs/common';
 import { LocalGuard } from 'src/auth/local_guard';
+import { BlogPost } from 'src/blogpost/blogpost.schema';
 
 @Resolver((of) => UserType)
 @UseGuards(LocalGuard)
@@ -25,17 +26,19 @@ export class UserResolver {
   ) {}
 
   @Mutation((returns) => UserType)
-  createUser(@Args('createUserDto') CreateUserDto: CreateUserDto) {
+  createUser(
+    @Args('createUserDto') CreateUserDto: CreateUserDto,
+  ): Promise<User> {
     return this.userService.createUser(CreateUserDto);
   }
 
   @Query((returns) => [UserType])
-  getUsers() {
+  getUsers(): Promise<User[]> {
     return this.userService.getUsers();
   }
 
   @Query((returns) => UserType)
-  getUserById(@Args('id') id: string) {
+  getUserById(@Args('id') id: string): Promise<User> {
     return this.userService.getUserById(id);
   }
 
@@ -43,7 +46,7 @@ export class UserResolver {
   assignBlogPostToUser(
     @Args('assignBlogPostToUserDto')
     assignBlogPostToUserDto: AssignBlogPostToUserDto,
-  ) {
+  ): Promise<User> {
     const { userId, blogPosts } = assignBlogPostToUserDto;
     return this.userService.assignBlogPostToUser(userId, blogPosts);
   }
@@ -52,17 +55,17 @@ export class UserResolver {
   updateUser(
     @Args('id') id: string,
     @Args('UpdateUserDto') UpdateUserDto: UpdateUserDto,
-  ) {
+  ): Promise<User> {
     return this.userService.updateUser(id, UpdateUserDto);
   }
 
   @Mutation((returns) => UserType)
-  deleteUser(@Args('id') id: string) {
+  deleteUser(@Args('id') id: string): Promise<User> {
     return this.userService.deleteUser(id);
   }
 
   @ResolveField()
-  async blogPosts(@Parent() user: User) {
+  async blogPosts(@Parent() user: User): Promise<BlogPost[]> {
     return this.blogPostService.getManyBlogPosts(user.blogPosts);
   }
 }
