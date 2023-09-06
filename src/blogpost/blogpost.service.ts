@@ -4,18 +4,23 @@ import { BlogPost } from './blogpost.schema';
 import { Model } from 'mongoose';
 import { CreateBlogPostDto } from './dto/create-blogpost-dto';
 import { UpdateBlogPostDto } from './dto/update-blogpost-dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateBlogPostCommand } from './commands/implementation/create-blogpost.command';
 
 @Injectable()
 export class BlogpostService {
   constructor(
     @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
+    private readonly commandBus: CommandBus,
   ) {}
 
-  async createBlogPost(
-    createBlogPostDto: CreateBlogPostDto,
-  ): Promise<BlogPost> {
-    const newBlogPost = new this.blogPostModel(createBlogPostDto);
-    return newBlogPost.save();
+  async createBlogPost(createBlogPostDto: CreateBlogPostDto) {
+    // const newBlogPost = new this.blogPostModel(createBlogPostDto);
+    // return newBlogPost.save();
+
+    return this.commandBus.execute(
+      new CreateBlogPostCommand(createBlogPostDto),
+    );
   }
 
   async getBlogPost(id: string): Promise<BlogPost> {
