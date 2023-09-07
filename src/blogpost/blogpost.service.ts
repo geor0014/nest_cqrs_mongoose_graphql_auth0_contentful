@@ -6,6 +6,7 @@ import { CreateBlogPostDto } from './dto/create-blogpost-dto';
 import { UpdateBlogPostDto } from './dto/update-blogpost-dto';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateBlogPostCommand } from './commands/implementation/create-blogpost.command';
+import { UpdateBlogPostCommand } from './commands/implementation/update-blogpost.command';
 
 @Injectable()
 export class BlogpostService {
@@ -15,9 +16,6 @@ export class BlogpostService {
   ) {}
 
   async createBlogPost(createBlogPostDto: CreateBlogPostDto) {
-    // const newBlogPost = new this.blogPostModel(createBlogPostDto);
-    // return newBlogPost.save();
-
     return this.commandBus.execute(
       new CreateBlogPostCommand(createBlogPostDto),
     );
@@ -39,7 +37,9 @@ export class BlogpostService {
     id: string,
     updateBlogPostDto: UpdateBlogPostDto,
   ): Promise<BlogPost> {
-    return this.blogPostModel.findByIdAndUpdate(id, updateBlogPostDto);
+    return this.commandBus.execute(
+      new UpdateBlogPostCommand(id, updateBlogPostDto),
+    );
   }
 
   async deleteBlogPost(id: string): Promise<BlogPost> {
