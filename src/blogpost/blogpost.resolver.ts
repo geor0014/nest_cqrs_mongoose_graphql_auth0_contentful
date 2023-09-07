@@ -3,10 +3,17 @@ import { BlogPostType } from './blogpost.type';
 import { BlogpostService } from './blogpost.service';
 import { CreateBlogPostDto } from './dto/create-blogpost-dto';
 import { UpdateBlogPostDto } from './dto/update-blogpost-dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateBlogPostCommand } from './commands/implementation/create-blogpost.command';
+import { UpdateBlogPostCommand } from './commands/implementation/update-blogpost.command';
+import { DeleteBlogPostCommand } from './commands/implementation/detele-blogpost.command';
 
 @Resolver((of) => BlogPostType)
 export class BlogPostResolver {
-  constructor(private blogpostService: BlogpostService) {}
+  constructor(
+    private blogpostService: BlogpostService,
+    private readonly commandBus: CommandBus,
+  ) {}
 
   @Query((returns) => [BlogPostType])
   getblogposts() {
@@ -22,7 +29,9 @@ export class BlogPostResolver {
   createBlogPost(
     @Args('createBlogPostDto') createBlogPostDto: CreateBlogPostDto,
   ) {
-    return this.blogpostService.createBlogPost(createBlogPostDto);
+    return this.commandBus.execute(
+      new CreateBlogPostCommand(createBlogPostDto),
+    );
   }
 
   @Mutation((returns) => BlogPostType)
@@ -30,11 +39,13 @@ export class BlogPostResolver {
     @Args('id') id: string,
     @Args('UpdateBlogPostDto') UpdateBlogPostDto: UpdateBlogPostDto,
   ) {
-    return this.blogpostService.updateBlogPost(id, UpdateBlogPostDto);
+    return this.commandBus.execute(
+      new UpdateBlogPostCommand(id, UpdateBlogPostDto),
+    );
   }
 
   @Mutation((returns) => BlogPostType)
   deleteBlogPost(@Args('id') id: string) {
-    return this.blogpostService.deleteBlogPost(id);
+    this.commandBus.execute(new DeleteBlogPostCommand(id));
   }
 }

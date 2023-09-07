@@ -15,11 +15,11 @@ export class BlogpostService {
     private readonly commandBus: CommandBus,
   ) {}
 
-  async createBlogPost(createBlogPostDto: CreateBlogPostDto) {
-    return this.commandBus.execute(
-      new CreateBlogPostCommand(createBlogPostDto),
-    );
-  }
+  // async createBlogPost(createBlogPostDto: CreateBlogPostDto) {
+  //   return this.commandBus.execute(
+  //     new CreateBlogPostCommand(createBlogPostDto),
+  //   );
+  // }
 
   async getBlogPost(id: string): Promise<BlogPost> {
     return this.blogPostModel.findById(id).exec();
@@ -33,16 +33,16 @@ export class BlogpostService {
     return this.blogPostModel.find({ _id: { $in: blogPostIds } }).exec();
   }
 
-  async updateBlogPost(
-    id: string,
-    updateBlogPostDto: UpdateBlogPostDto,
-  ): Promise<BlogPost> {
-    return this.commandBus.execute(
-      new UpdateBlogPostCommand(id, updateBlogPostDto),
-    );
-  }
+  // async updateBlogPost(
+  //   id: string,
+  //   updateBlogPostDto: UpdateBlogPostDto,
+  // ): Promise<BlogPost> {
+  //   return this.commandBus.execute(
+  //     new UpdateBlogPostCommand(id, updateBlogPostDto),
+  //   );
+  // }
 
-  async deleteBlogPost(id: string): Promise<BlogPost> {
-    return this.blogPostModel.findByIdAndDelete(id);
-  }
+  // async deleteBlogPost(id: string): Promise<BlogPost> {
+  //   return this.blogPostModel.findByIdAndDelete(id);
+  // }
 }
