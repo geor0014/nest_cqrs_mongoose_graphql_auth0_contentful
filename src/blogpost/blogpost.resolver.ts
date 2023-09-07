@@ -3,21 +3,23 @@ import { BlogPostType } from './blogpost.type';
 import { BlogpostService } from './blogpost.service';
 import { CreateBlogPostDto } from './dto/create-blogpost-dto';
 import { UpdateBlogPostDto } from './dto/update-blogpost-dto';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBlogPostCommand } from './commands/implementation/create-blogpost.command';
 import { UpdateBlogPostCommand } from './commands/implementation/update-blogpost.command';
 import { DeleteBlogPostCommand } from './commands/implementation/detele-blogpost.command';
+import { getAllBlogPostsQuery } from './queries/implementation/get-all-blogposts.query';
 
 @Resolver((of) => BlogPostType)
 export class BlogPostResolver {
   constructor(
     private blogpostService: BlogpostService,
     private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
   ) {}
 
   @Query((returns) => [BlogPostType])
   getblogposts() {
-    return this.blogpostService.getAllBlogPosts();
+    return this.queryBus.execute(new getAllBlogPostsQuery());
   }
 
   @Query((returns) => BlogPostType)
