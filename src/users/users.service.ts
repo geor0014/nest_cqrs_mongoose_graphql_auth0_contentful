@@ -30,12 +30,12 @@ export class UsersService {
   //   return this.userModel.findByIdAndDelete(id);
   // }
 
-  async assignBlogPostToUser(
-    userId: string,
-    blogPostId: string[],
-  ): Promise<User> {
-    const user = await this.userModel.findById(userId).exec();
-    user.blogPosts = [...user.blogPosts, ...blogPostId];
-    return user.save();
-  }
+  // async assignBlogPostToUser(
+  //   userId: string,
+  //   blogPostId: string[],
+  // ): Promise<User> {
+  //   const user = await this.userModel.findById(userId).exec();
+  //   user.blogPosts = [...user.blogPosts, ...blogPostId];
+  //   return user.save();
+  // }
 }

@@ -22,6 +22,7 @@ import { UpdateUserCommand } from './commands/implementation/update-user.command
 import { DeleteUserCommand } from './commands/implementation/delete-user.command';
 import { getAllUsersQuery } from './queries/implementation/get-all-users.query';
 import { GetUserQuery } from './queries/implementation/get-user.query';
+import { assignBlogPostToUserCommand } from './commands/implementation/assign-blogpost-to-user.command';
 
 @Resolver((of) => UserType)
 // @UseGuards(LocalGuard)
@@ -55,8 +56,9 @@ export class UserResolver {
     @Args('assignBlogPostToUserDto')
     assignBlogPostToUserDto: AssignBlogPostToUserDto,
   ): Promise<User> {
-    const { userId, blogPosts } = assignBlogPostToUserDto;
-    return this.userService.assignBlogPostToUser(userId, blogPosts);
+    return this.commandBus.execute(
+      new assignBlogPostToUserCommand(assignBlogPostToUserDto),
+    );
   }
 
   @Mutation((returns) => UserType)

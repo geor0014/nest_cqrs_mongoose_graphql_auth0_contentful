@@ -10,7 +10,6 @@ export class assignBlogPostToUserHandler implements ICommandHandler {
 
   async execute(command: assignBlogPostToUserCommand) {
     const { userId, blogPosts } = command.assignBlogPostToUserDto;
-
     const user = await this.userModel.findById(userId).exec();
     user.blogPosts = [...user.blogPosts, ...blogPosts];
     return user.save();
