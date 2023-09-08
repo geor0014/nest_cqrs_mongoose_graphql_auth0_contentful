@@ -9,10 +9,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async createUser(CreateUserDto: CreateUserDto): Promise<User> {
-    const newUser = new this.userModel(CreateUserDto);
-    return newUser.save();
-  }
+  // async createUser(CreateUserDto: CreateUserDto): Promise<User> {
+  //   const newUser = new this.userModel(CreateUserDto);
+  //   return newUser.save();
+  // }
 
   async getUsers(): Promise<User[]> {
     return this.userModel.find().exec();
@@ -22,9 +22,9 @@ export class UsersService {
     return this.userModel.findById(id).exec();
   }
 
-  async updateUser(id: string, UpdateUserDto: UpdateUserDto): Promise<User> {
-    return this.userModel.findByIdAndUpdate(id, UpdateUserDto);
-  }
+  // async updateUser(id: string, UpdateUserDto: UpdateUserDto): Promise<User> {
+  //   return this.userModel.findByIdAndUpdate(id, UpdateUserDto);
+  // }
 
   async deleteUser(id: string): Promise<User> {
     return this.userModel.findByIdAndDelete(id);

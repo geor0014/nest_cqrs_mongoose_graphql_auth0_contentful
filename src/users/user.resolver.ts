@@ -16,20 +16,24 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UseGuards } from '@nestjs/common';
 import { LocalGuard } from 'src/auth/local_guard';
 import { BlogPost } from 'src/blogpost/blogpost.schema';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from './commands/implementation/create-user.command';
+import { UpdateUserCommand } from './commands/implementation/update-user.command';
 
 @Resolver((of) => UserType)
-@UseGuards(LocalGuard)
+// @UseGuards(LocalGuard)
 export class UserResolver {
   constructor(
     private userService: UsersService,
     private blogPostService: BlogpostService,
+    private readonly commandBus: CommandBus,
   ) {}
 
   @Mutation((returns) => UserType)
   createUser(
     @Args('createUserDto') CreateUserDto: CreateUserDto,
   ): Promise<User> {
-    return this.userService.createUser(CreateUserDto);
+    return this.commandBus.execute(new CreateUserCommand(CreateUserDto));
   }
 
   @Query((returns) => [UserType])
@@ -56,7 +60,7 @@ export class UserResolver {
     @Args('id') id: string,
     @Args('UpdateUserDto') UpdateUserDto: UpdateUserDto,
   ): Promise<User> {
-    return this.userService.updateUser(id, UpdateUserDto);
+    return this.commandBus.execute(new UpdateUserCommand(id, UpdateUserDto));
   }
 
   @Mutation((returns) => UserType)
