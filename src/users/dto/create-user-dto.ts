@@ -16,7 +16,4 @@ export class CreateUserDto {
   @MinLength(5)
   @Field()
   password: string;
-
-  @Field(() => [ID], { nullable: true })
-  blogPosts: string[];
 }

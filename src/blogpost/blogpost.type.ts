@@ -10,6 +10,8 @@ export class BlogPostType {
   title: string;
   @Field()
   content: string;
+  @Field({ nullable: false })
+  slug: string;
   @Field((type) => UserType, { nullable: false })
-  user: User;
+  user: string;
 }

@@ -3,17 +3,18 @@
 # ------------------------------------------------------
 
 type User {
-  id: ID!
+  _id: String!
   name: String!
   email: String!
   password: String!
-  blogPosts: [BlogPost!]
+  blogposts: [BlogPost!]!
 }
 
 type BlogPost {
   id: ID!
   title: String!
   content: String!
+  slug: String!
   user: User!
 }
 
@@ -29,7 +30,6 @@ type Mutation {
   updateBlogPost(id: String!, UpdateBlogPostDto: UpdateBlogPostDto!): BlogPost!
   deleteBlogPost(id: String!): BlogPost!
   createUser(createUserDto: CreateUserDto!): User!
-  assignBlogPostToUser(assignBlogPostToUserDto: AssignBlogPostToUserDto!): User!
   updateUser(id: String!, UpdateUserDto: UpdateUserDto!): User!
   deleteUser(id: String!): User!
 }
@@ -37,6 +37,7 @@ type Mutation {
 input CreateBlogPostDto {
   title: String!
   content: String!
+  slug: String!
   user: ID!
 }
 
@@ -49,12 +50,6 @@ input CreateUserDto {
   name: String!
   email: String!
   password: String!
-  blogPosts: [ID!]
-}
-
-input AssignBlogPostToUserDto {
-  userId: ID!
-  blogPosts: [ID!]!
 }
 
 input UpdateUserDto {

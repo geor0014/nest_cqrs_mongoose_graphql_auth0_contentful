@@ -12,7 +12,9 @@ export class CreateBlogPostDto {
   @Field()
   content: string;
 
-  @IsString()
+  @Field({ nullable: false })
+  slug: string;
+
   @Field(() => ID, { nullable: false })
   user: string;
 }

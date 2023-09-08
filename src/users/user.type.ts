@@ -1,11 +1,9 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { BlogPost } from 'src/blogpost/blogpost.schema';
-import { BlogPostType } from 'src/blogpost/blogpost.type';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType('User')
 export class UserType {
-  @Field((type) => ID)
-  id: string;
+  @Field()
+  _id: string;
 
   @Field()
   name: string;
@@ -15,7 +13,4 @@ export class UserType {
 
   @Field()
   password: string;
-
-  @Field((type) => [BlogPostType], { nullable: true })
-  blogPosts: BlogPost[];
 }

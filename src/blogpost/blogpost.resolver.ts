@@ -1,4 +1,11 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { BlogPostType } from './blogpost.type';
 import { BlogpostService } from './blogpost.service';
 import { CreateBlogPostDto } from './dto/create-blogpost-dto';
@@ -9,6 +16,9 @@ import { UpdateBlogPostCommand } from './commands/implementation/update-blogpost
 import { DeleteBlogPostCommand } from './commands/implementation/detele-blogpost.command';
 import { getAllBlogPostsQuery } from './queries/implementation/get-all-blogposts.query';
 import { getBlogPostQuery } from './queries/implementation/get-blogpost.query';
+import { GetUserQuery } from 'src/users/queries/implementation/get-user.query';
+import { BlogPost } from './blogpost.schema';
+import { UserType } from 'src/users/user.type';
 
 @Resolver((of) => BlogPostType)
 export class BlogPostResolver {
@@ -50,5 +60,10 @@ export class BlogPostResolver {
   @Mutation((returns) => BlogPostType)
   deleteBlogPost(@Args('id') id: string) {
     this.commandBus.execute(new DeleteBlogPostCommand(id));
+  }
+
+  @ResolveField('user', (returns) => UserType)
+  async user(@Parent() blogpost: BlogPost): Promise<UserType> {
+    return this.queryBus.execute(new GetUserQuery(blogpost.user));
   }
 }

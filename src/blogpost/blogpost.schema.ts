@@ -1,4 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
+import { User } from 'src/users/user.schema';
 
 @Schema()
 export class BlogPost {
@@ -6,8 +8,11 @@ export class BlogPost {
   title: string;
   @Prop()
   content: string;
+  @Prop()
+  slug: string;
   @Prop({
-    type: { type: 'ObjectId', ref: 'User' },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: User.name,
   })
   user: string;
 }

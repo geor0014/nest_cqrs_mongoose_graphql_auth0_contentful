@@ -29,9 +29,9 @@ export class BlogpostService {
   //   return this.blogPostModel.find().exec();
   // }
 
-  async getManyBlogPosts(blogPostIds: string[]): Promise<BlogPost[]> {
-    return this.blogPostModel.find({ _id: { $in: blogPostIds } }).exec();
-  }
+  // async getManyBlogPosts(blogPostIds: string[]): Promise<BlogPost[]> {
+  //   return this.blogPostModel.find({ _id: { $in: blogPostIds } }).exec();
+  // }
 
   // async updateBlogPost(
   //   id: string,
