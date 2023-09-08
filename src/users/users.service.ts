@@ -14,21 +14,21 @@ export class UsersService {
   //   return newUser.save();
   // }
 
-  async getUsers(): Promise<User[]> {
-    return this.userModel.find().exec();
-  }
+  // async getUsers(): Promise<User[]> {
+  //   return this.userModel.find().exec();
+  // }
 
-  async getUserById(id: string): Promise<User> {
-    return this.userModel.findById(id).exec();
-  }
+  // async getUserById(id: string): Promise<User> {
+  //   return this.userModel.findById(id).exec();
+  // }
 
   // async updateUser(id: string, UpdateUserDto: UpdateUserDto): Promise<User> {
   //   return this.userModel.findByIdAndUpdate(id, UpdateUserDto);
   // }
 
-  async deleteUser(id: string): Promise<User> {
-    return this.userModel.findByIdAndDelete(id);
-  }
+  // async deleteUser(id: string): Promise<User> {
+  //   return this.userModel.findByIdAndDelete(id);
+  // }
 
   async assignBlogPostToUser(
     userId: string,

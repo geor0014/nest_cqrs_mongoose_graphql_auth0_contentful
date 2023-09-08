@@ -16,9 +16,12 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UseGuards } from '@nestjs/common';
 import { LocalGuard } from 'src/auth/local_guard';
 import { BlogPost } from 'src/blogpost/blogpost.schema';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateUserCommand } from './commands/implementation/create-user.command';
 import { UpdateUserCommand } from './commands/implementation/update-user.command';
+import { DeleteUserCommand } from './commands/implementation/delete-user.command';
+import { getAllUsersQuery } from './queries/implementation/get-all-users.query';
+import { GetUserQuery } from './queries/implementation/get-user.query';
 
 @Resolver((of) => UserType)
 // @UseGuards(LocalGuard)
@@ -27,6 +30,7 @@ export class UserResolver {
     private userService: UsersService,
     private blogPostService: BlogpostService,
     private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
   ) {}
 
   @Mutation((returns) => UserType)
@@ -38,12 +42,12 @@ export class UserResolver {
 
   @Query((returns) => [UserType])
   getUsers(): Promise<User[]> {
-    return this.userService.getUsers();
+    return this.queryBus.execute(new getAllUsersQuery());
   }
 
   @Query((returns) => UserType)
   getUserById(@Args('id') id: string): Promise<User> {
-    return this.userService.getUserById(id);
+    return this.queryBus.execute(new GetUserQuery(id));
   }
 
   @Mutation((returns) => UserType)
@@ -65,7 +69,7 @@ export class UserResolver {
 
   @Mutation((returns) => UserType)
   deleteUser(@Args('id') id: string): Promise<User> {
-    return this.userService.deleteUser(id);
+    return this.commandBus.execute(new DeleteUserCommand(id));
   }
 
   @ResolveField()
