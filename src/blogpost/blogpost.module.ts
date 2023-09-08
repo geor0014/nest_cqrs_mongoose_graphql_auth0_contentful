@@ -7,9 +7,10 @@ import { CreateBlogpostHandler } from './commands/handlers/create-blogpost.handl
 import { CqrsModule } from '@nestjs/cqrs';
 import { UpdateBlogPostHandler } from './commands/handlers/update-blogpost.handler';
 import { GetAllBlogPostsHandler } from './queries/handlers/get-all-blogposts.handler';
+import { GetBlogPostHandler } from './queries/handlers/get-blogpost.handler';
 
 export const CommandHandlers = [CreateBlogpostHandler, UpdateBlogPostHandler];
-export const QueryHandlers = [GetAllBlogPostsHandler];
+export const QueryHandlers = [GetAllBlogPostsHandler, GetBlogPostHandler];
 
 @Module({
   providers: [

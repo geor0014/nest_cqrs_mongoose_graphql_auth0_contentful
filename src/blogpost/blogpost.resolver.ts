@@ -8,6 +8,7 @@ import { CreateBlogPostCommand } from './commands/implementation/create-blogpost
 import { UpdateBlogPostCommand } from './commands/implementation/update-blogpost.command';
 import { DeleteBlogPostCommand } from './commands/implementation/detele-blogpost.command';
 import { getAllBlogPostsQuery } from './queries/implementation/get-all-blogposts.query';
+import { getBlogPostQuery } from './queries/implementation/get-blogpost.query';
 
 @Resolver((of) => BlogPostType)
 export class BlogPostResolver {
@@ -24,7 +25,7 @@ export class BlogPostResolver {
 
   @Query((returns) => BlogPostType)
   blogpostById(@Args('id') id: string) {
-    return this.blogpostService.getBlogPost(id);
+    return this.queryBus.execute(new getBlogPostQuery(id));
   }
 
   @Mutation((returns) => BlogPostType)
