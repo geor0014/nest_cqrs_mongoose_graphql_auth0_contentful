@@ -7,6 +7,7 @@ import { BlogpostModule } from './blogpost/blogpost.module';
 
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { AuthController } from './auth/auth.controller';
 require('dotenv').config();
 
 @Module({
