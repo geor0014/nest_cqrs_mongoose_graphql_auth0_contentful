@@ -7,33 +7,33 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LocalGuard } from './local_guard';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from 'src/users/commands/implementation/create-user.command';
 
 @Controller()
 // @UseGuards(LocalGuard)
 export class AuthController {
+  constructor(private readonly commandBus: CommandBus) {}
   @Get('/callback')
-  async callback(@Request() req, @Response() res) {
-    // console.log('callback');
-  }
-
-  @Get('/logout')
-  async logout(@Request() req, @Response() res) {}
+  async callback(@Request() req, @Response() res) {}
 
   @Get('/')
   async home(@Request() req, @Response() res) {
-    if (req.appSession.userData) {
-      res.send(`Hello ${req.appSession.userData.name}`);
+    const { userData } = req.appSession;
+
+    if (userData) {
+      res.send(`Hello ${userData.name}`);
+      if (userData.login_counts === 1) {
+        this.commandBus.execute(
+          new CreateUserCommand({
+            name: userData.name,
+            email: userData.email,
+            password: userData.sub,
+          }),
+        );
+      }
     } else {
-      res.send('Not Authenticated');
+      res.send('Hello World!');
     }
-  }
-
-  @Get('/login')
-  async login(@Request() req, @Response() res) {}
-
-  @Get('/profile')
-  // @UseGuards(LocalGuard)
-  async profile(@Request() req, @Response() res) {
-    return req.oidc.user;
   }
 }

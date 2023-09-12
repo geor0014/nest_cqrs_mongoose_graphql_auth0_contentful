@@ -28,7 +28,7 @@ export const QueryHandlers = [getAllUsersHandler, GetUserHandler];
       },
     ]),
     CqrsModule,
-    BlogpostModule,
+    // BlogpostModule,
   ],
 })
 export class UsersModule {}

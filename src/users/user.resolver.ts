@@ -7,10 +7,8 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { UserType } from './user.type';
-import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user-dto';
 import { User } from './user.schema';
-import { BlogpostService } from 'src/blogpost/blogpost.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UseGuards } from '@nestjs/common';
 import { LocalGuard } from 'src/auth/local_guard';
