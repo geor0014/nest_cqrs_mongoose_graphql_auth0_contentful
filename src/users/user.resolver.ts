@@ -27,8 +27,6 @@ import { BlogPostType } from 'src/blogpost/blogpost.type';
 // @UseGuards(LocalGuard)
 export class UserResolver {
   constructor(
-    private userService: UsersService,
-    private blogPostService: BlogpostService,
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}

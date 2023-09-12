@@ -31,6 +31,25 @@ const config: ConfigParams = {
       domain: 'localhost',
     },
   },
+  async afterCallback(req, res, session, decodedState) {
+    let userData;
+    try {
+      const user = await fetch(`${process.env.AUTH0_ISSUER_BASE_URL}userinfo`, {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          audience: process.env.AUTH0_AUDIENCE,
+        },
+      });
+      userData = await user.json();
+    } catch (error) {
+      console.error(error);
+    }
+
+    return {
+      ...session,
+      userData,
+    };
+  },
 };
 
 async function bootstrap() {
