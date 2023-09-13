@@ -20,6 +20,7 @@ import { getAllUsersQuery } from './queries/implementation/get-all-users.query';
 import { GetUserQuery } from './queries/implementation/get-user.query';
 import { getManyBlogPostsQuery } from 'src/blogpost/queries/implementation/get-many-blogposts.query';
 import { BlogPostType } from 'src/blogpost/blogpost.type';
+import { GetUserByTokenQuery } from './queries/implementation/get-user-by-token.query';
 
 @Resolver((of) => UserType)
 // @UseGuards(LocalGuard)
@@ -30,9 +31,7 @@ export class UserResolver {
   ) {}
 
   @Mutation((returns) => UserType)
-  createUser(
-    @Args('createUserDto') CreateUserDto: CreateUserDto,
-  ): Promise<User> {
+  createUser(@Args('User') CreateUserDto: CreateUserDto): Promise<User> {
     return this.commandBus.execute(new CreateUserCommand(CreateUserDto));
   }
 
@@ -44,6 +43,11 @@ export class UserResolver {
   @Query((returns) => UserType)
   getUserById(@Args('id') id: string): Promise<UserType> {
     return this.queryBus.execute(new GetUserQuery(id));
+  }
+
+  @Query((returns) => UserType)
+  async getUserByToken(@Args('token') token: string): Promise<UserType> {
+    return await this.queryBus.execute(new GetUserByTokenQuery(token));
   }
 
   @Mutation((returns) => UserType)

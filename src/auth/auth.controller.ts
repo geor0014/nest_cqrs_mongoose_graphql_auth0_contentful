@@ -7,13 +7,17 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LocalGuard } from './local_guard';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateUserCommand } from 'src/users/commands/implementation/create-user.command';
+import { GetUserByTokenQuery } from 'src/users/queries/implementation/get-user-by-token.query';
 
 @Controller()
 // @UseGuards(LocalGuard)
 export class AuthController {
-  constructor(private readonly commandBus: CommandBus) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
   @Get('/callback')
   async callback(@Request() req, @Response() res) {}
 
@@ -23,12 +27,26 @@ export class AuthController {
 
     if (userData) {
       res.send(`Hello ${userData.name}`);
-      if (userData.login_counts === 1) {
+      // if (userData.login_counts === 1) {
+      //   this.commandBus.execute(
+      //     new CreateUserCommand({
+      //       name: userData.name,
+      //       email: userData.email,
+      //       token: userData.sub,
+      //     }),
+      //   );
+      // }
+      const user = await this.queryBus.execute(
+        new GetUserByTokenQuery(userData.sub),
+      );
+      console.log(user);
+
+      if (!user) {
         this.commandBus.execute(
           new CreateUserCommand({
             name: userData.name,
             email: userData.email,
-            password: userData.sub,
+            token: userData.sub,
           }),
         );
       }

@@ -12,5 +12,5 @@ export class UserType {
   email: string;
 
   @Field()
-  password: string;
+  token: string;
 }

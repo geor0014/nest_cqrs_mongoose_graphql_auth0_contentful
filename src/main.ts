@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { auth } from 'express-openid-connect';
-import { auth0_config } from './auth/helpers/auth0.config';
+import { auth0_config } from './auth/auth0.config';
 require('dotenv').config();
 
 async function bootstrap() {

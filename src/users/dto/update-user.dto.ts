@@ -10,5 +10,5 @@ export class UpdateUserDto {
   email?: string;
 
   @Field(() => String, { nullable: true })
-  password?: string;
+  token?: string;
 }

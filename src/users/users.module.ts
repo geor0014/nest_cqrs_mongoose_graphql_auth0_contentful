@@ -10,13 +10,18 @@ import { UpdateUserHandler } from './commands/handlers/update-user.handler';
 import { DeleteUserHandler } from './commands/handlers/delete-user.handler';
 import { getAllUsersHandler } from './queries/handlers/get-all-users.handler';
 import { GetUserHandler } from './queries/handlers/get-user.handler';
+import { GetUserByTokenHandler } from './queries/handlers/get-user-by-token.handler';
 
 export const CommandHandlers = [
   CreateUserHandler,
   UpdateUserHandler,
   DeleteUserHandler,
 ];
-export const QueryHandlers = [getAllUsersHandler, GetUserHandler];
+export const QueryHandlers = [
+  getAllUsersHandler,
+  GetUserHandler,
+  GetUserByTokenHandler,
+];
 
 @Module({
   providers: [UsersService, UserResolver, ...CommandHandlers, ...QueryHandlers],
