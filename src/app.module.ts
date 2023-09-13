@@ -2,12 +2,15 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { MongooseModule } from '@nestjs/mongoose';
+import { MiddlewareConsumer } from '@nestjs/common';
+import { RequestMethod } from '@nestjs/common';
 
 import { BlogpostModule } from './blogpost/blogpost.module';
 
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { AuthController } from './auth/auth.controller';
+import { CheckIfUserIsRegistered } from './middleware/check-if-user-is-registered.middleware';
+import { CqrsModule } from '@nestjs/cqrs';
 require('dotenv').config();
 
 @Module({
@@ -20,6 +23,13 @@ require('dotenv').config();
     BlogpostModule,
     UsersModule,
     AuthModule,
+    CqrsModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer
+      .apply(CheckIfUserIsRegistered)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}
