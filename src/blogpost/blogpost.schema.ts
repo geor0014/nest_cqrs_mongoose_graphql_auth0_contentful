@@ -14,7 +14,7 @@ export class BlogPost {
     type: mongoose.Schema.Types.ObjectId,
     ref: User.name,
   })
-  user: string;
+  author: string;
 }
 
 export const BlogPostSchema = SchemaFactory.createForClass(BlogPost);

@@ -60,8 +60,8 @@ export class BlogPostResolver {
     return this.commandBus.execute(new DeleteBlogPostCommand(id));
   }
 
-  @ResolveField('user', (returns) => UserType)
+  @ResolveField('author', (returns) => UserType)
   async user(@Parent() blogpost: BlogPost): Promise<UserType> {
-    return this.queryBus.execute(new GetUserQuery(blogpost.user));
+    return this.queryBus.execute(new GetUserQuery(blogpost.author));
   }
 }

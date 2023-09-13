@@ -15,7 +15,7 @@ type BlogPost {
   title: String!
   content: String!
   slug: String!
-  user: User!
+  author: User!
 }
 
 type Query {
