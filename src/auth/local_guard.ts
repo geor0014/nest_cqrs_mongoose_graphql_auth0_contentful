@@ -10,7 +10,12 @@ import { AuthGuard } from '@nestjs/passport';
 @Injectable()
 export class LocalGuard extends AuthGuard('jwt') {
   getRequest(context: ExecutionContext) {
-    const ctx = GqlExecutionContext.create(context);
-    return ctx.getContext().req;
+    switch (context.getType<string>()) {
+      case 'http':
+        return context.switchToHttp().getResponse();
+      case 'graphql':
+        const ctx = GqlExecutionContext.create(context);
+        return ctx.getContext().res;
+    }
   }
 }
