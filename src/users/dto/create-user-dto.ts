@@ -1,5 +1,5 @@
 import { InputType, Field, ID } from '@nestjs/graphql';
-import { MinLength, IsString, IsEmail } from 'class-validator';
+import { MinLength, IsString, IsEmail, IsOptional } from 'class-validator';
 @InputType()
 export class CreateUserDto {
   @IsString()
@@ -15,8 +15,5 @@ export class CreateUserDto {
   @IsString()
   @MinLength(5)
   @Field()
-  password: string;
-
-  @Field(() => [ID], { nullable: true })
-  blogPosts: string[];
+  token?: string;
 }

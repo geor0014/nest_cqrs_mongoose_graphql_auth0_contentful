@@ -14,11 +14,7 @@ export class User {
   @Prop({
     required: true,
   })
-  password: string;
-  @Prop({
-    type: [{ type: 'ObjectId', ref: 'BlogPost' }],
-  })
-  blogPosts: string[];
+  token: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -1,40 +1,67 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { BlogPostType } from './blogpost.type';
-import { BlogpostService } from './blogpost.service';
 import { CreateBlogPostDto } from './dto/create-blogpost-dto';
 import { UpdateBlogPostDto } from './dto/update-blogpost-dto';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { CreateBlogPostCommand } from './commands/implementation/create-blogpost.command';
+import { UpdateBlogPostCommand } from './commands/implementation/update-blogpost.command';
+import { DeleteBlogPostCommand } from './commands/implementation/detele-blogpost.command';
+import { GetAllBlogPostsQuery } from './queries/implementation/get-all-blogposts.query';
+import { GetBlogPostQuery } from './queries/implementation/get-blogpost.query';
+import { GetUserQuery } from 'src/users/queries/implementation/get-user.query';
+import { BlogPost } from './blogpost.schema';
+import { UserType } from 'src/users/user.type';
 
 @Resolver((of) => BlogPostType)
 export class BlogPostResolver {
-  constructor(private blogpostService: BlogpostService) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
 
   @Query((returns) => [BlogPostType])
-  getblogposts() {
-    return this.blogpostService.getAllBlogPosts();
+  async getblogposts(): Promise<BlogPost[]> {
+    return this.queryBus.execute(new GetAllBlogPostsQuery());
   }
 
   @Query((returns) => BlogPostType)
-  blogpostById(@Args('id') id: string) {
-    return this.blogpostService.getBlogPost(id);
+  async blogpostById(@Args('id') id: string): Promise<BlogPost> {
+    return this.queryBus.execute(new GetBlogPostQuery(id));
   }
 
   @Mutation((returns) => BlogPostType)
-  createBlogPost(
+  async createBlogPost(
     @Args('createBlogPostDto') createBlogPostDto: CreateBlogPostDto,
-  ) {
-    return this.blogpostService.createBlogPost(createBlogPostDto);
+  ): Promise<BlogPost> {
+    return this.commandBus.execute(
+      new CreateBlogPostCommand(createBlogPostDto),
+    );
   }
 
   @Mutation((returns) => BlogPostType)
-  updateBlogPost(
+  async updateBlogPost(
     @Args('id') id: string,
     @Args('UpdateBlogPostDto') UpdateBlogPostDto: UpdateBlogPostDto,
-  ) {
-    return this.blogpostService.updateBlogPost(id, UpdateBlogPostDto);
+  ): Promise<BlogPost> {
+    return this.commandBus.execute(
+      new UpdateBlogPostCommand(id, UpdateBlogPostDto),
+    );
   }
 
   @Mutation((returns) => BlogPostType)
-  deleteBlogPost(@Args('id') id: string) {
-    return this.blogpostService.deleteBlogPost(id);
+  async deleteBlogPost(@Args('id') id: string): Promise<BlogPost> {
+    return this.commandBus.execute(new DeleteBlogPostCommand(id));
+  }
+
+  @ResolveField('user', (returns) => UserType)
+  async user(@Parent() blogpost: BlogPost): Promise<UserType> {
+    return this.queryBus.execute(new GetUserQuery(blogpost.user));
   }
 }

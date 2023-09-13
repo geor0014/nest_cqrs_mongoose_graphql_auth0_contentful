@@ -7,59 +7,64 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { UserType } from './user.type';
-import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user-dto';
-import { AssignBlogPostToUserDto } from './dto/assign-blogpost-to-user-dto';
 import { User } from './user.schema';
-import { BlogpostService } from 'src/blogpost/blogpost.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UseGuards } from '@nestjs/common';
+import { LocalGuard } from 'src/auth/local-guard';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from './commands/implementation/create-user.command';
+import { UpdateUserCommand } from './commands/implementation/update-user.command';
+import { DeleteUserCommand } from './commands/implementation/delete-user.command';
+import { GetAllUsersQuery } from './queries/implementation/get-all-users.query';
+import { GetUserQuery } from './queries/implementation/get-user.query';
+import { GetManyBlogPostsQuery } from 'src/blogpost/queries/implementation/get-many-blogposts.query';
+import { BlogPostType } from 'src/blogpost/blogpost.type';
+import { GetUserByTokenQuery } from './queries/implementation/get-user-by-token.query';
 
 @Resolver((of) => UserType)
+// @UseGuards(LocalGuard)
 export class UserResolver {
   constructor(
-    private userService: UsersService,
-    private blogPostService: BlogpostService,
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
   ) {}
 
   @Mutation((returns) => UserType)
-  createUser(@Args('createUserDto') CreateUserDto: CreateUserDto) {
-    return this.userService.createUser(CreateUserDto);
+  async createUser(@Args('User') CreateUserDto: CreateUserDto): Promise<User> {
+    return this.commandBus.execute(new CreateUserCommand(CreateUserDto));
   }
 
   @Query((returns) => [UserType])
-  getUsers() {
-    return this.userService.getUsers();
+  async getUsers(): Promise<User[]> {
+    return this.queryBus.execute(new GetAllUsersQuery());
   }
 
   @Query((returns) => UserType)
-  getUserById(@Args('id') id: string) {
-    return this.userService.getUserById(id);
+  async getUserById(@Args('id') id: string): Promise<UserType> {
+    return this.queryBus.execute(new GetUserQuery(id));
+  }
+
+  @Query((returns) => UserType)
+  async getUserByToken(@Args('token') token: string): Promise<UserType> {
+    return await this.queryBus.execute(new GetUserByTokenQuery(token));
   }
 
   @Mutation((returns) => UserType)
-  assignBlogPostToUser(
-    @Args('assignBlogPostToUserDto')
-    assignBlogPostToUserDto: AssignBlogPostToUserDto,
-  ) {
-    const { userId, blogPosts } = assignBlogPostToUserDto;
-    return this.userService.assignBlogPostToUser(userId, blogPosts);
-  }
-
-  @Mutation((returns) => UserType)
-  updateUser(
+  async updateUser(
     @Args('id') id: string,
     @Args('UpdateUserDto') UpdateUserDto: UpdateUserDto,
-  ) {
-    return this.userService.updateUser(id, UpdateUserDto);
+  ): Promise<User> {
+    return this.commandBus.execute(new UpdateUserCommand(id, UpdateUserDto));
   }
 
   @Mutation((returns) => UserType)
-  deleteUser(@Args('id') id: string) {
-    return this.userService.deleteUser(id);
+  async deleteUser(@Args('id') id: string): Promise<User> {
+    return this.commandBus.execute(new DeleteUserCommand(id));
   }
 
-  @ResolveField()
-  async blogPosts(@Parent() user: User) {
-    return this.blogPostService.getManyBlogPosts(user.blogPosts);
+  @ResolveField('blogposts', (returns) => [BlogPostType])
+  async getBlogPost(@Parent() user: UserType): Promise<BlogPostType[]> {
+    return this.queryBus.execute(new GetManyBlogPostsQuery(user));
   }
 }

@@ -3,17 +3,18 @@
 # ------------------------------------------------------
 
 type User {
-  id: ID!
+  _id: String!
   name: String!
   email: String!
-  password: String!
-  blogPosts: [BlogPost!]
+  token: String!
+  blogposts: [BlogPost!]!
 }
 
 type BlogPost {
   id: ID!
   title: String!
   content: String!
+  slug: String!
   user: User!
 }
 
@@ -22,14 +23,14 @@ type Query {
   blogpostById(id: String!): BlogPost!
   getUsers: [User!]!
   getUserById(id: String!): User!
+  getUserByToken(token: String!): User!
 }
 
 type Mutation {
   createBlogPost(createBlogPostDto: CreateBlogPostDto!): BlogPost!
   updateBlogPost(id: String!, UpdateBlogPostDto: UpdateBlogPostDto!): BlogPost!
   deleteBlogPost(id: String!): BlogPost!
-  createUser(createUserDto: CreateUserDto!): User!
-  assignBlogPostToUser(assignBlogPostToUserDto: AssignBlogPostToUserDto!): User!
+  createUser(User: CreateUserDto!): User!
   updateUser(id: String!, UpdateUserDto: UpdateUserDto!): User!
   deleteUser(id: String!): User!
 }
@@ -37,6 +38,7 @@ type Mutation {
 input CreateBlogPostDto {
   title: String!
   content: String!
+  slug: String!
   user: ID!
 }
 
@@ -48,17 +50,11 @@ input UpdateBlogPostDto {
 input CreateUserDto {
   name: String!
   email: String!
-  password: String!
-  blogPosts: [ID!]
-}
-
-input AssignBlogPostToUserDto {
-  userId: ID!
-  blogPosts: [ID!]!
+  token: String!
 }
 
 input UpdateUserDto {
   name: String
   email: String
-  password: String
+  token: String
 }
