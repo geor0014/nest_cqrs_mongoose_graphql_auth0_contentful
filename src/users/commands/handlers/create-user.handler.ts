@@ -8,7 +8,7 @@ import { Model } from 'mongoose';
 export class CreateUserHandler implements ICommandHandler {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async execute(command: CreateUserCommand) {
+  async execute(command: CreateUserCommand): Promise<User> {
     const newUser = new this.userModel(command.createUserDto);
     return newUser.save();
   }

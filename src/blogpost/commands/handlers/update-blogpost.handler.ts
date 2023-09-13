@@ -12,7 +12,7 @@ export class UpdateBlogPostHandler
     @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
   ) {}
 
-  async execute(command: UpdateBlogPostCommand) {
+  async execute(command: UpdateBlogPostCommand): Promise<BlogPost> {
     const updatedBlogPost = await this.blogPostModel.findByIdAndUpdate(
       command.id,
       command.updateBlogPostDto,

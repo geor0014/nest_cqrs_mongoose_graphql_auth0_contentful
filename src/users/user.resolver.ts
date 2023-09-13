@@ -31,17 +31,17 @@ export class UserResolver {
   ) {}
 
   @Mutation((returns) => UserType)
-  createUser(@Args('User') CreateUserDto: CreateUserDto): Promise<User> {
+  async createUser(@Args('User') CreateUserDto: CreateUserDto): Promise<User> {
     return this.commandBus.execute(new CreateUserCommand(CreateUserDto));
   }
 
   @Query((returns) => [UserType])
-  getUsers(): Promise<User[]> {
+  async getUsers(): Promise<User[]> {
     return this.queryBus.execute(new GetAllUsersQuery());
   }
 
   @Query((returns) => UserType)
-  getUserById(@Args('id') id: string): Promise<UserType> {
+  async getUserById(@Args('id') id: string): Promise<UserType> {
     return this.queryBus.execute(new GetUserQuery(id));
   }
 
@@ -51,7 +51,7 @@ export class UserResolver {
   }
 
   @Mutation((returns) => UserType)
-  updateUser(
+  async updateUser(
     @Args('id') id: string,
     @Args('UpdateUserDto') UpdateUserDto: UpdateUserDto,
   ): Promise<User> {
@@ -59,7 +59,7 @@ export class UserResolver {
   }
 
   @Mutation((returns) => UserType)
-  deleteUser(@Args('id') id: string): Promise<User> {
+  async deleteUser(@Args('id') id: string): Promise<User> {
     return this.commandBus.execute(new DeleteUserCommand(id));
   }
 

@@ -10,7 +10,7 @@ export class GetManyBlogPostsHandler implements IQueryHandler {
     @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
   ) {}
 
-  async execute(query: GetManyBlogPostsQuery) {
+  async execute(query: GetManyBlogPostsQuery): Promise<BlogPost[]> {
     const { user } = query;
     return await this.blogPostModel.find({ user: user._id }).exec();
   }

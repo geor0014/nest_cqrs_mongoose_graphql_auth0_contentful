@@ -10,7 +10,7 @@ export class GetAllBlogPostsHandler implements IQueryHandler {
     @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
   ) {}
 
-  async execute(query: GetAllBlogPostsQuery) {
+  async execute(query: GetAllBlogPostsQuery): Promise<BlogPost[]> {
     return this.blogPostModel.find().exec();
   }
 }

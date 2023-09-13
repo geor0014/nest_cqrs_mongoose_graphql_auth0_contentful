@@ -27,37 +27,37 @@ export class BlogPostResolver {
   ) {}
 
   @Query((returns) => [BlogPostType])
-  getblogposts() {
+  async getblogposts(): Promise<BlogPost[]> {
     return this.queryBus.execute(new GetAllBlogPostsQuery());
   }
 
   @Query((returns) => BlogPostType)
-  blogpostById(@Args('id') id: string) {
+  async blogpostById(@Args('id') id: string): Promise<BlogPost> {
     return this.queryBus.execute(new GetBlogPostQuery(id));
   }
 
   @Mutation((returns) => BlogPostType)
-  createBlogPost(
+  async createBlogPost(
     @Args('createBlogPostDto') createBlogPostDto: CreateBlogPostDto,
-  ) {
+  ): Promise<BlogPost> {
     return this.commandBus.execute(
       new CreateBlogPostCommand(createBlogPostDto),
     );
   }
 
   @Mutation((returns) => BlogPostType)
-  updateBlogPost(
+  async updateBlogPost(
     @Args('id') id: string,
     @Args('UpdateBlogPostDto') UpdateBlogPostDto: UpdateBlogPostDto,
-  ) {
+  ): Promise<BlogPost> {
     return this.commandBus.execute(
       new UpdateBlogPostCommand(id, UpdateBlogPostDto),
     );
   }
 
   @Mutation((returns) => BlogPostType)
-  deleteBlogPost(@Args('id') id: string) {
-    this.commandBus.execute(new DeleteBlogPostCommand(id));
+  async deleteBlogPost(@Args('id') id: string): Promise<BlogPost> {
+    return this.commandBus.execute(new DeleteBlogPostCommand(id));
   }
 
   @ResolveField('user', (returns) => UserType)

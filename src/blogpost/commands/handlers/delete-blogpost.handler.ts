@@ -12,7 +12,7 @@ export class DeleteBlogPostHandler
     @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
   ) {}
 
-  async execute(command: DeleteBlogPostCommand) {
+  async execute(command: DeleteBlogPostCommand): Promise<void> {
     const deletedBlogPost = await this.blogPostModel.findByIdAndDelete(
       command.id,
     );

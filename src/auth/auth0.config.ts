@@ -28,7 +28,7 @@ export const auth0Config: ConfigParams = {
       domain: 'localhost',
     },
   },
-  async afterCallback(req, res, session, decodedState) {
+  async afterCallback(req, res, session, decodedState): Promise<any> {
     let userData;
     try {
       const user = await fetch(`${process.env.AUTH0_ISSUER_BASE_URL}userinfo`, {

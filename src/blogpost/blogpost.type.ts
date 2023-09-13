@@ -1,5 +1,4 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { User } from 'src/users/user.schema';
 import { UserType } from 'src/users/user.type';
 
 @ObjectType('BlogPost')

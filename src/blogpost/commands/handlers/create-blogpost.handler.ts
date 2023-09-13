@@ -11,7 +11,7 @@ export class CreateBlogpostHandler
   constructor(
     @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
   ) {}
-  async execute(command: CreateBlogPostCommand) {
+  async execute(command: CreateBlogPostCommand): Promise<BlogPost> {
     const newBlogPost = new this.blogPostModel(command.createBlogPostDto);
     return newBlogPost.save();
   }
