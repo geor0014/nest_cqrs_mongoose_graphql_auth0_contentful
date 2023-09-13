@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from './user.schema';
 import { UserResolver } from './user.resolver';
@@ -24,7 +23,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  providers: [UsersService, UserResolver, ...CommandHandlers, ...QueryHandlers],
+  providers: [UserResolver, ...CommandHandlers, ...QueryHandlers],
   imports: [
     MongooseModule.forFeature([
       {

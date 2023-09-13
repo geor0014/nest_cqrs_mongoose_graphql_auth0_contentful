@@ -11,14 +11,14 @@ import { CreateUserDto } from './dto/create-user-dto';
 import { User } from './user.schema';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UseGuards } from '@nestjs/common';
-import { LocalGuard } from 'src/auth/local_guard';
+import { LocalGuard } from 'src/auth/local-guard';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateUserCommand } from './commands/implementation/create-user.command';
 import { UpdateUserCommand } from './commands/implementation/update-user.command';
 import { DeleteUserCommand } from './commands/implementation/delete-user.command';
-import { getAllUsersQuery } from './queries/implementation/get-all-users.query';
+import { GetAllUsersQuery } from './queries/implementation/get-all-users.query';
 import { GetUserQuery } from './queries/implementation/get-user.query';
-import { getManyBlogPostsQuery } from 'src/blogpost/queries/implementation/get-many-blogposts.query';
+import { GetManyBlogPostsQuery } from 'src/blogpost/queries/implementation/get-many-blogposts.query';
 import { BlogPostType } from 'src/blogpost/blogpost.type';
 import { GetUserByTokenQuery } from './queries/implementation/get-user-by-token.query';
 
@@ -37,7 +37,7 @@ export class UserResolver {
 
   @Query((returns) => [UserType])
   getUsers(): Promise<User[]> {
-    return this.queryBus.execute(new getAllUsersQuery());
+    return this.queryBus.execute(new GetAllUsersQuery());
   }
 
   @Query((returns) => UserType)
@@ -65,6 +65,6 @@ export class UserResolver {
 
   @ResolveField('blogposts', (returns) => [BlogPostType])
   async getBlogPost(@Parent() user: UserType): Promise<BlogPostType[]> {
-    return this.queryBus.execute(new getManyBlogPostsQuery(user));
+    return this.queryBus.execute(new GetManyBlogPostsQuery(user));
   }
 }

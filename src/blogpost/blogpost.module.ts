@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { BlogPostResolver } from './blogpost.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BlogPostSchema } from './blogpost.schema';
-import { BlogpostService } from './blogpost.service';
 import { CreateBlogpostHandler } from './commands/handlers/create-blogpost.handler';
 import { CqrsModule } from '@nestjs/cqrs';
 import { UpdateBlogPostHandler } from './commands/handlers/update-blogpost.handler';
@@ -18,12 +17,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  providers: [
-    BlogPostResolver,
-    BlogpostService,
-    ...CommandHandlers,
-    ...QueryHandlers,
-  ],
+  providers: [BlogPostResolver, ...CommandHandlers, ...QueryHandlers],
   imports: [
     MongooseModule.forFeature([
       {
@@ -33,6 +27,5 @@ export const QueryHandlers = [
     ]),
     CqrsModule,
   ],
-  exports: [BlogpostService],
 })
 export class BlogpostModule {}

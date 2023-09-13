@@ -1,7 +1,7 @@
 import { ConfigParams } from 'express-openid-connect';
 require('dotenv').config();
 
-export const auth0_config: ConfigParams = {
+export const auth0Config: ConfigParams = {
   auth0Logout: true,
   authorizationParams: {
     response_type: 'code',

@@ -6,7 +6,7 @@ import {
   Response,
   UseGuards,
 } from '@nestjs/common';
-import { LocalGuard } from './local_guard';
+import { LocalGuard } from './local-guard';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateUserCommand } from 'src/users/commands/implementation/create-user.command';
 import { GetUserByTokenQuery } from 'src/users/queries/implementation/get-user-by-token.query';
