@@ -16,7 +16,7 @@ import { DeleteBlogPostCommand } from './commands/implementation/detele-blogpost
 import { GetAllBlogPostsQuery } from './queries/implementation/get-all-blogposts.query';
 import { GetBlogPostQuery } from './queries/implementation/get-blogpost.query';
 import { GetUserQuery } from 'src/users/queries/implementation/get-user.query';
-import { BlogPost } from './blogpost.schema';
+// import { BlogPost } from './blogpost.schema';
 import { UserType } from 'src/users/user.type';
 
 @Resolver((of) => BlogPostType)
@@ -27,19 +27,30 @@ export class BlogPostResolver {
   ) {}
 
   @Query((returns) => [BlogPostType])
-  async getblogposts(): Promise<BlogPost[]> {
-    return this.queryBus.execute(new GetAllBlogPostsQuery());
+  async getblogposts() {
+    const blogs = await this.queryBus.execute(new GetAllBlogPostsQuery());
+    const blogPosts = blogs.map((blog) => {
+      return {
+        id: blog.sys.id,
+        title: blog.fields.title,
+        content: blog.fields.content,
+        author: blog.fields.author,
+      };
+    });
+    console.log(blogPosts);
+
+    return blogPosts;
   }
 
   @Query((returns) => BlogPostType)
-  async blogpostById(@Args('id') id: string): Promise<BlogPost> {
+  async blogpostById(@Args('id') id: string) {
     return this.queryBus.execute(new GetBlogPostQuery(id));
   }
 
   @Mutation((returns) => BlogPostType)
   async createBlogPost(
     @Args('createBlogPostDto') createBlogPostDto: CreateBlogPostDto,
-  ): Promise<BlogPost> {
+  ) {
     return this.commandBus.execute(
       new CreateBlogPostCommand(createBlogPostDto),
     );
@@ -49,19 +60,19 @@ export class BlogPostResolver {
   async updateBlogPost(
     @Args('id') id: string,
     @Args('UpdateBlogPostDto') UpdateBlogPostDto: UpdateBlogPostDto,
-  ): Promise<BlogPost> {
+  ) {
     return this.commandBus.execute(
       new UpdateBlogPostCommand(id, UpdateBlogPostDto),
     );
   }
 
   @Mutation((returns) => BlogPostType)
-  async deleteBlogPost(@Args('id') id: string): Promise<BlogPost> {
+  async deleteBlogPost(@Args('id') id: string) {
     return this.commandBus.execute(new DeleteBlogPostCommand(id));
   }
 
   @ResolveField('author', (returns) => UserType)
-  async user(@Parent() blogpost: BlogPost): Promise<UserType> {
+  async user(@Parent() blogpost: any): Promise<UserType> {
     return this.queryBus.execute(new GetUserQuery(blogpost.author));
   }
 }

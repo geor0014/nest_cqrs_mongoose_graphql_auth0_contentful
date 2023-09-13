@@ -1,5 +1,5 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { BlogPost } from 'src/blogpost/blogpost.schema';
+// import { BlogPost } from 'src/blogpost/blogpost.schema';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Model } from 'mongoose';
 import { DeleteBlogPostCommand } from '../implementation/detele-blogpost.command';
@@ -8,13 +8,12 @@ import { DeleteBlogPostCommand } from '../implementation/detele-blogpost.command
 export class DeleteBlogPostHandler
   implements ICommandHandler<DeleteBlogPostCommand>
 {
-  constructor(
-    @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
-  ) {}
+  constructor() // @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
+  {}
 
   async execute(command: DeleteBlogPostCommand): Promise<void> {
-    const deletedBlogPost = await this.blogPostModel.findByIdAndDelete(
-      command.id,
-    );
+    // const deletedBlogPost = await this.blogPostModel.findByIdAndDelete(
+    //   command.id,
+    // );
   }
 }
