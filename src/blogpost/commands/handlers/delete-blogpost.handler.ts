@@ -2,6 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteBlogPostCommand } from '../implementation/detele-blogpost.command';
 import { createContentfulClient } from 'src/blogpost/contentful.config';
 import { BlogPostType } from 'src/blogpost/blogpost.type';
+import { CreateBlogPostFromEntry } from 'src/blogpost/helpers/craete-blogpost-from-contentful-entry.helper';
 
 @CommandHandler(DeleteBlogPostCommand)
 export class DeleteBlogPostHandler
@@ -12,21 +13,12 @@ export class DeleteBlogPostHandler
       const client = await createContentfulClient();
 
       const entry = await client.getEntry(command.id);
-      const zoneIdentifier = 'en-US';
-
-      const { fields } = entry;
 
       await entry.unpublish();
 
       entry.delete();
 
-      const blogPost = {
-        id: entry.sys.id,
-        title: fields.title[zoneIdentifier],
-        content: fields.content[zoneIdentifier],
-        slug: fields.slug[zoneIdentifier],
-        author: fields.author[zoneIdentifier],
-      };
+      const blogPost = CreateBlogPostFromEntry(entry);
 
       return blogPost;
     } catch (error) {

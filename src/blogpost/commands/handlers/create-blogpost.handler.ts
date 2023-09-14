@@ -1,45 +1,38 @@
 import { CreateBlogPostCommand } from '../implementation/create-blogpost.command';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { createContentfulClient } from 'src/blogpost/contentful.config';
+import { CreateBlogPostFromEntry } from 'src/blogpost/helpers/craete-blogpost-from-contentful-entry.helper';
 
 @CommandHandler(CreateBlogPostCommand)
 export class CreateBlogpostHandler
   implements ICommandHandler<CreateBlogPostCommand>
 {
-  constructor() {} // @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
   async execute(command: CreateBlogPostCommand) {
     try {
       const client = await createContentfulClient();
-      const zoneIdentifier = 'en-US';
 
-      const createdBlogPost = await client.createEntry('blogPost', {
+      const { title, content, slug, author } = command.createBlogPostDto;
+
+      const entry = await client.createEntry('blogPost', {
         fields: {
           title: {
-            'en-US': command.createBlogPostDto.title,
+            'en-US': title,
           },
           content: {
-            'en-US': command.createBlogPostDto.content,
+            'en-US': content,
           },
           slug: {
-            'en-US': command.createBlogPostDto.slug,
+            'en-US': slug,
           },
           author: {
-            'en-US': command.createBlogPostDto.author,
+            'en-US': author,
           },
         },
       });
 
-      await createdBlogPost.publish();
+      await entry.publish();
 
-      const { fields } = createdBlogPost;
-
-      const blogPost = {
-        id: createdBlogPost.sys.id,
-        title: fields.title[zoneIdentifier],
-        content: fields.content[zoneIdentifier],
-        slug: fields.slug[zoneIdentifier],
-        author: fields.author[zoneIdentifier],
-      };
+      const blogPost = CreateBlogPostFromEntry(entry);
 
       return blogPost;
     } catch (error) {
