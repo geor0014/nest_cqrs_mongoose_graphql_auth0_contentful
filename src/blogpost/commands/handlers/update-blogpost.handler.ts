@@ -1,22 +1,54 @@
 import { UpdateBlogPostCommand } from '../implementation/update-blogpost.command';
 import { InjectModel } from '@nestjs/mongoose';
-// import { BlogPost } from 'src/blogpost/blogpost.schema';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Model } from 'mongoose';
+import { createContentfulClient } from 'src/blogpost/contentful.config';
+import { application } from 'express';
 
 @CommandHandler(UpdateBlogPostCommand)
 export class UpdateBlogPostHandler
   implements ICommandHandler<UpdateBlogPostCommand>
 {
-  constructor() // @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
-  {}
-
   async execute(command: UpdateBlogPostCommand) {
-    // const updatedBlogPost = await this.blogPostModel.findByIdAndUpdate(
-    //   command.id,
-    //   command.updateBlogPostDto,
-    //   { new: true },
-    // );
-    // return updatedBlogPost;
+    try {
+      const client = await createContentfulClient();
+
+      const entry = await client.getEntry(command.id);
+
+      const zoneIdentifier = 'en-US';
+
+      await entry.patch([
+        {
+          op: 'replace',
+          path: 'fields/title',
+          value: {
+            zoneIdentifier: command.updateBlogPostDto.title,
+          },
+        },
+        {
+          op: 'replace',
+          path: '/fields/content',
+          value: {
+            zoneIdentifier: command.updateBlogPostDto.content,
+          },
+        },
+      ]);
+
+      console.log('entry', entry.fields);
+
+      const { fields } = entry;
+
+      const blogPost = {
+        id: entry.sys.id,
+        title: fields.title[zoneIdentifier],
+        content: fields.content[zoneIdentifier],
+        slug: fields.slug[zoneIdentifier],
+        author: fields.author[zoneIdentifier],
+      };
+
+      return blogPost;
+    } catch (error) {
+      console.error('Error updating blog post:', error);
+      throw new Error('Failed to update blog post');
+    }
   }
 }

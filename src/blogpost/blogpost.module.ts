@@ -6,12 +6,14 @@ import { UpdateBlogPostHandler } from './commands/handlers/update-blogpost.handl
 import { GetAllBlogPostsHandler } from './queries/handlers/get-all-blogposts.handler';
 import { GetBlogPostHandler } from './queries/handlers/get-blogpost.handler';
 import { GetManyBlogPostsHandler } from './queries/handlers/get-many-blogposts.handler';
+import { DeleteBlogPostHandler } from './commands/handlers/delete-blogpost.handler';
 
 export const CommandHandlers = [CreateBlogpostHandler, UpdateBlogPostHandler];
 export const QueryHandlers = [
   GetAllBlogPostsHandler,
   GetBlogPostHandler,
   GetManyBlogPostsHandler,
+  DeleteBlogPostHandler,
 ];
 
 @Module({
