@@ -3,13 +3,12 @@ import { GetBlogPostQuery } from '../implementation/get-blogpost.query';
 import { InjectModel } from '@nestjs/mongoose';
 // import { BlogPost } from 'src/blogpost/blogpost.schema';
 import { Model } from 'mongoose';
+import { createContentfulClient } from 'src/blogpost/contentful.config';
 
 @QueryHandler(GetBlogPostQuery)
 export class GetBlogPostHandler implements IQueryHandler {
-  constructor() // @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
-  {}
-
   async execute(query: GetBlogPostQuery) {
-    // return this.blogPostModel.findById(query.id).exec();
+    const client = await createContentfulClient();
+    return await client.getEntry(query.id);
   }
 }

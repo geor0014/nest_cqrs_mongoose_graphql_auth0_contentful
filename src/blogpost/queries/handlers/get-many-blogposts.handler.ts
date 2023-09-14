@@ -1,16 +1,22 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetManyBlogPostsQuery } from '../implementation/get-many-blogposts.query';
-import { InjectModel } from '@nestjs/mongoose';
-// import { BlogPost } from 'src/blogpost/blogpost.schema';
-import { Model } from 'mongoose';
+import { createContentfulClient } from 'src/blogpost/contentful.config';
+import { log } from 'console';
 
 @QueryHandler(GetManyBlogPostsQuery)
 export class GetManyBlogPostsHandler implements IQueryHandler {
-  constructor() // @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
-  {}
+  constructor() {} // @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
 
   async execute(query: GetManyBlogPostsQuery) {
     const { user } = query;
-    // return await this.blogPostModel.find({ user: user._id }).exec();
+    const client = await createContentfulClient();
+
+    //  get only the entries that have author asme as the user.token
+    const entries = await client.getEntries({
+      content_type: 'blogPost',
+      'fields.author': user._id.valueOf(),
+    });
+
+    return entries.items;
   }
 }

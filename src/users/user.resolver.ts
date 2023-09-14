@@ -64,7 +64,17 @@ export class UserResolver {
   }
 
   @ResolveField('blogposts', (returns) => [BlogPostType])
-  async getBlogPost(@Parent() user: UserType): Promise<BlogPostType[]> {
-    return this.queryBus.execute(new GetManyBlogPostsQuery(user));
+  async getBlogPost(@Parent() user: UserType) {
+    const posts = await this.queryBus.execute(new GetManyBlogPostsQuery(user));
+
+    const blogPosts = posts.map((post) => {
+      return {
+        id: post.sys.id,
+        title: post.fields.title,
+        content: post.fields.content,
+        author: post.fields.author,
+      };
+    });
+    return blogPosts;
   }
 }

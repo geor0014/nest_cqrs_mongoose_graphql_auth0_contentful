@@ -7,8 +7,6 @@ import { createContentfulClient } from 'src/blogpost/contentful.config';
 
 @QueryHandler(GetAllBlogPostsQuery)
 export class GetAllBlogPostsHandler implements IQueryHandler {
-  constructor() {} // @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
-
   async execute(query: GetAllBlogPostsQuery): Promise<any> {
     const client = await createContentfulClient();
     const { items } = await client.getEntries({

@@ -37,14 +37,14 @@ export class BlogPostResolver {
         author: blog.fields.author,
       };
     });
-    console.log(blogPosts);
 
     return blogPosts;
   }
 
   @Query((returns) => BlogPostType)
   async blogpostById(@Args('id') id: string) {
-    return this.queryBus.execute(new GetBlogPostQuery(id));
+    const { fields } = await this.queryBus.execute(new GetBlogPostQuery(id));
+    return fields;
   }
 
   @Mutation((returns) => BlogPostType)
