@@ -14,20 +14,24 @@ export class UpdateBlogPostHandler
       const entry = await client.getEntry(command.id);
 
       await entry.patch([
-        {
-          op: 'replace',
-          path: 'fields/title',
-          value: {
-            'en-US': command.updateBlogPostDto.title,
-          },
-        },
-        {
-          op: 'replace',
-          path: '/fields/content',
-          value: {
-            'en-US': command.updateBlogPostDto.content,
-          },
-        },
+        JSON.parse(
+          JSON.stringify({
+            op: 'replace',
+            path: 'fields/title',
+            value: {
+              'en-US': command.updateBlogPostDto.title,
+            },
+          }),
+        ),
+        JSON.parse(
+          JSON.stringify({
+            op: 'replace',
+            path: '/fields/content',
+            value: {
+              'en-US': command.updateBlogPostDto.content,
+            },
+          }),
+        ),
       ]);
 
       await entry.publish();

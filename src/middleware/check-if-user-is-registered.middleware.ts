@@ -30,9 +30,6 @@ export class CheckIfUserIsRegistered implements NestMiddleware {
         );
       }
     }
-    // else {
-    //   res.send('Hello World!');
-    // }
     next();
   }
 }
