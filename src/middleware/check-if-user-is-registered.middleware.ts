@@ -12,20 +12,18 @@ export class CheckIfUserIsRegistered implements NestMiddleware {
     private readonly queryBus: QueryBus,
   ) {}
   async use(@Request() req, @Response() res, next: NextFunction) {
-    const { userData } = req.appSession;
+    if (req.appSession.userData) {
+      const { name, sub, email } = req.appSession.userData;
 
-    if (userData) {
-      res.send(`Hello ${userData.name}`);
-      const user = await this.queryBus.execute(
-        new GetUserByTokenQuery(userData.sub),
-      );
+      res.send(`Hello ${name}`);
+      const user = await this.queryBus.execute(new GetUserByTokenQuery(sub));
 
       if (!user) {
         this.commandBus.execute(
           new CreateUserCommand({
-            name: userData.name,
-            email: userData.email,
-            token: userData.sub,
+            name,
+            email,
+            token: sub,
           }),
         );
       }
