@@ -16,7 +16,6 @@ import { DeleteBlogPostCommand } from './commands/implementation/detele-blogpost
 import { GetAllBlogPostsQuery } from './queries/implementation/get-all-blogposts.query';
 import { GetBlogPostQuery } from './queries/implementation/get-blogpost.query';
 import { GetUserQuery } from 'src/users/queries/implementation/get-user.query';
-// import { BlogPost } from './blogpost.schema';
 import { UserType } from 'src/users/user.type';
 
 @Resolver((of) => BlogPostType)
@@ -27,30 +26,19 @@ export class BlogPostResolver {
   ) {}
 
   @Query((returns) => [BlogPostType])
-  async getblogposts() {
-    const blogs = await this.queryBus.execute(new GetAllBlogPostsQuery());
-    const blogPosts = blogs.map((blog) => {
-      return {
-        id: blog.sys.id,
-        title: blog.fields.title,
-        content: blog.fields.content,
-        author: blog.fields.author,
-      };
-    });
-
-    return blogPosts;
+  async getblogposts(): Promise<BlogPostType[]> {
+    return await this.queryBus.execute(new GetAllBlogPostsQuery());
   }
 
   @Query((returns) => BlogPostType)
-  async blogpostById(@Args('id') id: string) {
-    const { fields } = await this.queryBus.execute(new GetBlogPostQuery(id));
-    return fields;
+  async blogpostById(@Args('id') id: string): Promise<BlogPostType> {
+    return await this.queryBus.execute(new GetBlogPostQuery(id));
   }
 
   @Mutation((returns) => BlogPostType)
   async createBlogPost(
     @Args('createBlogPostDto') createBlogPostDto: CreateBlogPostDto,
-  ) {
+  ): Promise<BlogPostType> {
     return this.commandBus.execute(
       new CreateBlogPostCommand(createBlogPostDto),
     );
@@ -60,7 +48,7 @@ export class BlogPostResolver {
   async updateBlogPost(
     @Args('id') id: string,
     @Args('UpdateBlogPostDto') UpdateBlogPostDto: UpdateBlogPostDto,
-  ) {
+  ): Promise<BlogPostType> {
     return this.commandBus.execute(
       new UpdateBlogPostCommand(id, UpdateBlogPostDto),
     );
