@@ -1,4 +1,4 @@
-export function CreateBlogPostFromEntry(entry) {
+export function createBlogPostFromEntry(entry) {
   const zoneIdentifier = 'en-US';
 
   const {

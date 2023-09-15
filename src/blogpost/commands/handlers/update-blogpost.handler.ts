@@ -1,7 +1,7 @@
 import { UpdateBlogPostCommand } from '../implementation/update-blogpost.command';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ContentfulService } from 'src/blogpost/contentful.config';
-import { CreateBlogPostFromEntry } from 'src/blogpost/helpers/craete-blogpost-from-contentful-entry.helper';
+import { createBlogPostFromEntry } from 'src/blogpost/services/craete-blogpost-from-contentful-entry.helper';
 
 @CommandHandler(UpdateBlogPostCommand)
 export class UpdateBlogPostHandler
@@ -10,34 +10,24 @@ export class UpdateBlogPostHandler
   constructor(private readonly contentfulService: ContentfulService) {}
   async execute(command: UpdateBlogPostCommand) {
     const entry = await this.contentfulService.environment.getEntry(command.id);
-    console.log(entry);
 
-    const body = [];
-    if (command.updateBlogPostDto.title)
-      body.push({
-        op: 'replace',
-        path: '/fields/title',
-        value: {
-          'en-US': command.updateBlogPostDto.title,
-        },
-      });
+    // destructuring the fields object
+    const { title, content, slug } = entry.fields;
 
-    if (command.updateBlogPostDto.content)
-      body.push({
-        op: 'replace',
-        path: '/fields/content',
-        value: {
-          'en-US': command.updateBlogPostDto.content,
-        },
-      });
+    title['en-US'] = command.updateBlogPostDto.title;
+    content['en-US'] = command.updateBlogPostDto.content;
+    // convert the title to a slug and replace spaces with dashes and remove any special characters and make it lowercase
+    slug['en-US'] = command.updateBlogPostDto.title
+      .toLocaleLowerCase()
+      .replace(/[^a-zA-Z0-9 ]/g, '')
+      .replace(/\s+/g, '-');
 
-    await entry.patch(body);
-    await entry.publish();
+    const updatedEntry = await entry.update();
 
-    const blogPost = CreateBlogPostFromEntry(entry);
+    await updatedEntry.publish();
+
+    const blogPost = createBlogPostFromEntry(entry);
 
     return blogPost;
-
-    return { title: 'foo', content: 'bar', slug: 'test', author: 'reza' };
   }
 }
