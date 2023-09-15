@@ -8,40 +8,37 @@ export class UpdateBlogPostHandler
   implements ICommandHandler<UpdateBlogPostCommand>
 {
   async execute(command: UpdateBlogPostCommand) {
-    try {
-      const client = await createContentfulClient();
+    const client = await createContentfulClient();
 
-      const entry = await client.getEntry(command.id);
+    const entry = await client.getEntry(command.id);
+    console.log(entry);
 
-      await entry.patch([
-        JSON.parse(
-          JSON.stringify({
-            op: 'replace',
-            path: 'fields/title',
-            value: {
-              'en-US': command.updateBlogPostDto.title,
-            },
-          }),
-        ),
-        JSON.parse(
-          JSON.stringify({
-            op: 'replace',
-            path: '/fields/content',
-            value: {
-              'en-US': command.updateBlogPostDto.content,
-            },
-          }),
-        ),
-      ]);
+    const body = [];
+    if (command.updateBlogPostDto.title)
+      body.push({
+        op: 'replace',
+        path: '/fields/title',
+        value: {
+          'en-US': command.updateBlogPostDto.title,
+        },
+      });
 
-      await entry.publish();
+    if (command.updateBlogPostDto.content)
+      body.push({
+        op: 'replace',
+        path: '/fields/content',
+        value: {
+          'en-US': command.updateBlogPostDto.content,
+        },
+      });
 
-      const blogPost = CreateBlogPostFromEntry(entry);
+    await entry.patch(body);
+    await entry.publish();
 
-      return blogPost;
-    } catch (error) {
-      console.error('Error updating blog post:', error);
-      throw new Error('Failed to update blog post');
-    }
+    const blogPost = CreateBlogPostFromEntry(entry);
+
+    return blogPost;
+
+    return { title: 'foo', content: 'bar', slug: 'test', author: 'reza' };
   }
 }
