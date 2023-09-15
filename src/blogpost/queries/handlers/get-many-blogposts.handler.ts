@@ -1,17 +1,16 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetManyBlogPostsQuery } from '../implementation/get-many-blogposts.query';
-import { createContentfulClient } from 'src/blogpost/contentful.config';
+import { ContentfulService } from 'src/blogpost/contentful.config';
 
 @QueryHandler(GetManyBlogPostsQuery)
 export class GetManyBlogPostsHandler implements IQueryHandler {
-  constructor() {} // @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
+  constructor(private readonly contentfulService: ContentfulService) {}
 
   async execute(query: GetManyBlogPostsQuery) {
     try {
       const { user } = query;
-      const client = await createContentfulClient();
 
-      const response = await client.getEntries({
+      const response = await this.contentfulService.environment.getEntries({
         content_type: 'blogPost',
         'fields.author': user._id.valueOf(),
       });

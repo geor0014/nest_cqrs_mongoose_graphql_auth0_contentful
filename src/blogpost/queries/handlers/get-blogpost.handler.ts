@@ -1,13 +1,15 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetBlogPostQuery } from '../implementation/get-blogpost.query';
-import { createContentfulClient } from 'src/blogpost/contentful.config';
+import { ContentfulService } from 'src/blogpost/contentful.config';
 
 @QueryHandler(GetBlogPostQuery)
 export class GetBlogPostHandler implements IQueryHandler {
+  constructor(private readonly contentfulService: ContentfulService) {}
   async execute(query: GetBlogPostQuery) {
     try {
-      const client = await createContentfulClient();
-      const response = await client.getEntry(query.id);
+      const response = await this.contentfulService.environment.getEntry(
+        query.id,
+      );
       const { fields } = response;
       const zoneIdentifier = 'en-US';
       const blogpost = {

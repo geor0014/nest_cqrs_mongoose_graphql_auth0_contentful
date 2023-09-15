@@ -1,16 +1,15 @@
 import { UpdateBlogPostCommand } from '../implementation/update-blogpost.command';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { createContentfulClient } from 'src/blogpost/contentful.config';
+import { ContentfulService } from 'src/blogpost/contentful.config';
 import { CreateBlogPostFromEntry } from 'src/blogpost/helpers/craete-blogpost-from-contentful-entry.helper';
 
 @CommandHandler(UpdateBlogPostCommand)
 export class UpdateBlogPostHandler
   implements ICommandHandler<UpdateBlogPostCommand>
 {
+  constructor(private readonly contentfulService: ContentfulService) {}
   async execute(command: UpdateBlogPostCommand) {
-    const client = await createContentfulClient();
-
-    const entry = await client.getEntry(command.id);
+    const entry = await this.contentfulService.environment.getEntry(command.id);
     console.log(entry);
 
     const body = [];

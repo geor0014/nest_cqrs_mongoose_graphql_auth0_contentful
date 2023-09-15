@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteBlogPostCommand } from '../implementation/detele-blogpost.command';
-import { createContentfulClient } from 'src/blogpost/contentful.config';
+import { ContentfulService } from 'src/blogpost/contentful.config';
 import { BlogPostType } from 'src/blogpost/blogpost.type';
 import { CreateBlogPostFromEntry } from 'src/blogpost/helpers/craete-blogpost-from-contentful-entry.helper';
 
@@ -8,11 +8,12 @@ import { CreateBlogPostFromEntry } from 'src/blogpost/helpers/craete-blogpost-fr
 export class DeleteBlogPostHandler
   implements ICommandHandler<DeleteBlogPostCommand>
 {
+  constructor(private readonly contentfulService: ContentfulService) {}
   async execute(command: DeleteBlogPostCommand): Promise<BlogPostType> {
     try {
-      const client = await createContentfulClient();
-
-      const entry = await client.getEntry(command.id);
+      const entry = await this.contentfulService.environment.getEntry(
+        command.id,
+      );
 
       await entry.unpublish();
 

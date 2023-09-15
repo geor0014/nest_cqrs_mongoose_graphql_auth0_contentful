@@ -1,15 +1,14 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetAllBlogPostsQuery } from '../implementation/get-all-blogposts.query';
 
-import { createContentfulClient } from 'src/blogpost/contentful.config';
+import { ContentfulService } from 'src/blogpost/contentful.config';
 
 @QueryHandler(GetAllBlogPostsQuery)
 export class GetAllBlogPostsHandler implements IQueryHandler {
+  constructor(private readonly contentfulService: ContentfulService) {}
   async execute(query: GetAllBlogPostsQuery): Promise<any> {
     try {
-      const client = await createContentfulClient();
-
-      const response = await client.getEntries({
+      const response = await this.contentfulService.environment.getEntries({
         content_type: 'blogPost',
       });
 
