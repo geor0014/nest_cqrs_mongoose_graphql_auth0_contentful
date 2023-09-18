@@ -21,6 +21,8 @@ export class AuthController {
   async home(@Request() req, @Response() res) {
     if (!req.oidc.isAuthenticated()) {
       res.send('Please login');
+    } else {
+      res.send(`Hello ${req.oidc.user.name}`);
     }
   }
 }
