@@ -17,7 +17,12 @@ export class AuthController {
   constructor() {}
   @Get('/callback')
   async callback(@Request() req, @Response() res) {}
-
   @Get('/')
-  async home(@Request() req, @Response() res) {}
+  async home(@Request() req, @Response() res) {
+    if (!req.oidc.isAuthenticated()) {
+      res.send('Please login');
+    } else {
+      res.send(`Hello ${req.oidc.user.name}`);
+    }
+  }
 }

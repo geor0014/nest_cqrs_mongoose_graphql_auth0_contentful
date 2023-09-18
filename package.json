@@ -32,6 +32,8 @@
     "@nestjs/typeorm": "^10.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "contentful": "^10.5.2",
+    "contentful-management": "^10.45.1",
     "express-openid-connect": "^2.16.0",
     "graphql": "^16.8.0",
     "jwks-rsa": "^3.0.1",

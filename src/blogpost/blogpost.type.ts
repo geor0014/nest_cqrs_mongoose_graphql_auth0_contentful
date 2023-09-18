@@ -12,5 +12,5 @@ export class BlogPostType {
   @Field({ nullable: false })
   slug: string;
   @Field((type) => UserType, { nullable: false })
-  user: string;
+  author: string;
 }

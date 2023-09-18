@@ -16,5 +16,5 @@ export class CreateBlogPostDto {
   slug: string;
 
   @Field(() => ID, { nullable: false })
-  user: string;
+  author: string;
 }

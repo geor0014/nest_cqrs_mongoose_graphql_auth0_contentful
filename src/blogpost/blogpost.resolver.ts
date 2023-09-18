@@ -16,7 +16,6 @@ import { DeleteBlogPostCommand } from './commands/implementation/detele-blogpost
 import { GetAllBlogPostsQuery } from './queries/implementation/get-all-blogposts.query';
 import { GetBlogPostQuery } from './queries/implementation/get-blogpost.query';
 import { GetUserQuery } from 'src/users/queries/implementation/get-user.query';
-import { BlogPost } from './blogpost.schema';
 import { UserType } from 'src/users/user.type';
 
 @Resolver((of) => BlogPostType)
@@ -27,41 +26,71 @@ export class BlogPostResolver {
   ) {}
 
   @Query((returns) => [BlogPostType])
-  async getblogposts(): Promise<BlogPost[]> {
-    return this.queryBus.execute(new GetAllBlogPostsQuery());
+  async getblogposts(): Promise<BlogPostType[]> {
+    try {
+      return await this.queryBus.execute(new GetAllBlogPostsQuery());
+    } catch (error) {
+      console.log(' error in getblogposts resolver', error);
+      throw new Error('error in getblogposts resolver');
+    }
   }
 
   @Query((returns) => BlogPostType)
-  async blogpostById(@Args('id') id: string): Promise<BlogPost> {
-    return this.queryBus.execute(new GetBlogPostQuery(id));
+  async blogpostById(@Args('id') id: string): Promise<BlogPostType> {
+    try {
+      return await this.queryBus.execute(new GetBlogPostQuery(id));
+    } catch (error) {
+      console.log('error in blogpostById resolver', error);
+      throw new Error('error in blogpostById resolver');
+    }
   }
 
   @Mutation((returns) => BlogPostType)
   async createBlogPost(
     @Args('createBlogPostDto') createBlogPostDto: CreateBlogPostDto,
-  ): Promise<BlogPost> {
-    return this.commandBus.execute(
-      new CreateBlogPostCommand(createBlogPostDto),
-    );
+  ): Promise<BlogPostType> {
+    try {
+      return this.commandBus.execute(
+        new CreateBlogPostCommand(createBlogPostDto),
+      );
+    } catch (error) {
+      console.log('error in createBlogPost resolver', error);
+      throw new Error('error in createBlogPost resolver');
+    }
   }
 
   @Mutation((returns) => BlogPostType)
   async updateBlogPost(
     @Args('id') id: string,
     @Args('UpdateBlogPostDto') UpdateBlogPostDto: UpdateBlogPostDto,
-  ): Promise<BlogPost> {
-    return this.commandBus.execute(
-      new UpdateBlogPostCommand(id, UpdateBlogPostDto),
-    );
+  ): Promise<BlogPostType> {
+    try {
+      return this.commandBus.execute(
+        new UpdateBlogPostCommand(id, UpdateBlogPostDto),
+      );
+    } catch (error) {
+      console.log('error in updateBlogPost resolver', error);
+      throw new Error('error in updateBlogPost resolver');
+    }
   }
 
   @Mutation((returns) => BlogPostType)
-  async deleteBlogPost(@Args('id') id: string): Promise<BlogPost> {
-    return this.commandBus.execute(new DeleteBlogPostCommand(id));
+  async deleteBlogPost(@Args('id') id: string) {
+    try {
+      return this.commandBus.execute(new DeleteBlogPostCommand(id));
+    } catch (error) {
+      console.log('error in deleteBlogPost resolver', error);
+      throw new Error('error in deleteBlogPost resolver');
+    }
   }
 
-  @ResolveField('user', (returns) => UserType)
-  async user(@Parent() blogpost: BlogPost): Promise<UserType> {
-    return this.queryBus.execute(new GetUserQuery(blogpost.user));
+  @ResolveField('author', (returns) => UserType)
+  async user(@Parent() blogpost: any): Promise<UserType> {
+    try {
+      return this.queryBus.execute(new GetUserQuery(blogpost.author));
+    } catch (error) {
+      console.log('error in user resolver', error);
+      throw new Error('error in user resolver');
+    }
   }
 }

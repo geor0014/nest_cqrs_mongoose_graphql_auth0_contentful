@@ -1,18 +1,39 @@
-import { InjectModel } from '@nestjs/mongoose';
 import { CreateBlogPostCommand } from '../implementation/create-blogpost.command';
-import { BlogPost } from 'src/blogpost/blogpost.schema';
-import { Model } from 'mongoose';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { ContentfulService } from 'src/blogpost/contentful.config';
+import { createBlogPostFromEntry } from 'src/blogpost/services/craete-blogpost-from-contentful-entry.helper';
 
 @CommandHandler(CreateBlogPostCommand)
 export class CreateBlogpostHandler
   implements ICommandHandler<CreateBlogPostCommand>
 {
-  constructor(
-    @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
-  ) {}
-  async execute(command: CreateBlogPostCommand): Promise<BlogPost> {
-    const newBlogPost = new this.blogPostModel(command.createBlogPostDto);
-    return newBlogPost.save();
+  constructor(private readonly contentfulService: ContentfulService) {}
+  async execute(command: CreateBlogPostCommand) {
+    const { title, content, slug, author } = command.createBlogPostDto;
+    const entry = await this.contentfulService.environment.createEntry(
+      'blogPost',
+      {
+        fields: {
+          title: {
+            'en-US': title,
+          },
+          content: {
+            'en-US': content,
+          },
+          slug: {
+            'en-US': slug,
+          },
+          author: {
+            'en-US': author,
+          },
+        },
+      },
+    );
+
+    await entry.publish();
+
+    const blogPost = createBlogPostFromEntry(entry);
+
+    return blogPost;
   }
 }

@@ -1,16 +1,23 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetAllBlogPostsQuery } from '../implementation/get-all-blogposts.query';
-import { InjectModel } from '@nestjs/mongoose';
-import { BlogPost } from 'src/blogpost/blogpost.schema';
-import { Model } from 'mongoose';
+
+import { ContentfulService } from 'src/blogpost/contentful.config';
+import { createBlogPostFromEntry } from 'src/blogpost/services/craete-blogpost-from-contentful-entry.helper';
 
 @QueryHandler(GetAllBlogPostsQuery)
 export class GetAllBlogPostsHandler implements IQueryHandler {
-  constructor(
-    @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
-  ) {}
+  constructor(private readonly contentfulService: ContentfulService) {}
+  async execute(query: GetAllBlogPostsQuery): Promise<any> {
+    const response = await this.contentfulService.environment.getEntries({
+      content_type: 'blogPost',
+    });
 
-  async execute(query: GetAllBlogPostsQuery): Promise<BlogPost[]> {
-    return this.blogPostModel.find().exec();
+    const { items } = response;
+
+    const mappedItems = items.map((item) => {
+      return createBlogPostFromEntry(item);
+    });
+
+    return mappedItems;
   }
 }

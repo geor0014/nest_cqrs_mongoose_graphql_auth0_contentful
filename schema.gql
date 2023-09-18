@@ -15,7 +15,7 @@ type BlogPost {
   title: String!
   content: String!
   slug: String!
-  user: User!
+  author: User!
 }
 
 type Query {
@@ -39,7 +39,7 @@ input CreateBlogPostDto {
   title: String!
   content: String!
   slug: String!
-  user: ID!
+  author: ID!
 }
 
 input UpdateBlogPostDto {

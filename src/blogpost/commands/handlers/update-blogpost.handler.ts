@@ -1,23 +1,33 @@
 import { UpdateBlogPostCommand } from '../implementation/update-blogpost.command';
-import { InjectModel } from '@nestjs/mongoose';
-import { BlogPost } from 'src/blogpost/blogpost.schema';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Model } from 'mongoose';
+import { ContentfulService } from 'src/blogpost/contentful.config';
+import { createBlogPostFromEntry } from 'src/blogpost/services/craete-blogpost-from-contentful-entry.helper';
 
 @CommandHandler(UpdateBlogPostCommand)
 export class UpdateBlogPostHandler
   implements ICommandHandler<UpdateBlogPostCommand>
 {
-  constructor(
-    @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
-  ) {}
+  constructor(private readonly contentfulService: ContentfulService) {}
+  async execute(command: UpdateBlogPostCommand) {
+    const entry = await this.contentfulService.environment.getEntry(command.id);
 
-  async execute(command: UpdateBlogPostCommand): Promise<BlogPost> {
-    const updatedBlogPost = await this.blogPostModel.findByIdAndUpdate(
-      command.id,
-      command.updateBlogPostDto,
-      { new: true },
-    );
-    return updatedBlogPost;
+    // destructuring the fields object
+    const { title, content, slug } = entry.fields;
+
+    title['en-US'] = command.updateBlogPostDto.title;
+    content['en-US'] = command.updateBlogPostDto.content;
+    // convert the title to a slug and replace spaces with dashes and remove any special characters and make it lowercase
+    slug['en-US'] = command.updateBlogPostDto.title
+      .toLocaleLowerCase()
+      .replace(/[^a-zA-Z0-9 ]/g, '')
+      .replace(/\s+/g, '-');
+
+    const updatedEntry = await entry.update();
+
+    await updatedEntry.publish();
+
+    const blogPost = createBlogPostFromEntry(entry);
+
+    return blogPost;
   }
 }
