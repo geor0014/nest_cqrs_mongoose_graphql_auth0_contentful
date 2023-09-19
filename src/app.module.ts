@@ -11,6 +11,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CheckIfUserIsRegistered } from './middleware/check-if-user-is-registered.middleware';
 import { CqrsModule } from '@nestjs/cqrs';
+import { CommercialToolsModule } from './commercialtools/commercialtools.module';
 require('dotenv').config();
 
 @Module({
@@ -24,6 +25,7 @@ require('dotenv').config();
     UsersModule,
     AuthModule,
     CqrsModule,
+    CommercialToolsModule,
   ],
 })
 export class AppModule {
