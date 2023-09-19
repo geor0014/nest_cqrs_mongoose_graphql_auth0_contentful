@@ -1,6 +1,7 @@
 import { Controller, Get, Request, Post, Response } from '@nestjs/common';
 import axios from 'axios';
 import { getAccessToken } from './services/get-access-token';
+import { buildResponseObjectFromProduct } from './services/build-product-object';
 
 @Controller()
 export class CommercialToolsController {
@@ -14,7 +15,8 @@ export class CommercialToolsController {
         Authorization: `Bearer ${token}`,
       },
     });
-    res.send(products.data);
+    const formatedProducts = buildResponseObjectFromProduct(products);
+    res.send(formatedProducts);
   }
 
   @Get('/customers')
