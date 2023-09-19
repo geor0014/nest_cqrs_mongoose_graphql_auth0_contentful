@@ -1,6 +1,6 @@
 export const buildResponseObjectFromProduct = (response) => {
   const {
-    data: { total, count, results },
+    body: { total, count, results },
   } = response;
 
   return {

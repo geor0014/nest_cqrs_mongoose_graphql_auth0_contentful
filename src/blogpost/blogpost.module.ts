@@ -3,7 +3,7 @@ import { BlogPostResolver } from './blogpost.resolver';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CommandHandlers } from './commands/handlers';
 import { QueryHandlers } from './queries/handlers';
-import { ContentfulService } from './contentful.config';
+import { ContentfulService } from './contentful-service';
 
 @Module({
   providers: [

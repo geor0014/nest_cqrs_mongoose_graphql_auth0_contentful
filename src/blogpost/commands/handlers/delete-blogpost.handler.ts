@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteBlogPostCommand } from '../implementation/detele-blogpost.command';
-import { ContentfulService } from 'src/blogpost/contentful.config';
+import { ContentfulService } from 'src/blogpost/contentful-service';
 import { BlogPostType } from 'src/blogpost/blogpost.type';
 import { createBlogPostFromEntry } from 'src/blogpost/services/craete-blogpost-from-contentful-entry.helper';
 

@@ -1,6 +1,6 @@
 import { CreateBlogPostCommand } from '../implementation/create-blogpost.command';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ContentfulService } from 'src/blogpost/contentful.config';
+import { ContentfulService } from 'src/blogpost/contentful-service';
 import { createBlogPostFromEntry } from 'src/blogpost/services/craete-blogpost-from-contentful-entry.helper';
 
 @CommandHandler(CreateBlogPostCommand)

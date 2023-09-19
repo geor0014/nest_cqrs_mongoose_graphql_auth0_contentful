@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetAllBlogPostsQuery } from '../implementation/get-all-blogposts.query';
 
-import { ContentfulService } from 'src/blogpost/contentful.config';
+import { ContentfulService } from 'src/blogpost/contentful-service';
 import { createBlogPostFromEntry } from 'src/blogpost/services/craete-blogpost-from-contentful-entry.helper';
 
 @QueryHandler(GetAllBlogPostsQuery)
